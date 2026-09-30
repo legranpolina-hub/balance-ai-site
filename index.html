@@ -1,0 +1,995 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Balance AI — Полина Легран</title>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Oswald:wght@500;600&family=Montserrat:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --sky-1:#BFE2FA; --sky-2:#DCF0FE; --sky-3:#F7FCFF; --water:#BEE3F5;
+  --ink:#16222B; --muted:#5E7382; --line:rgba(22,34,43,.09); --glass:rgba(255,255,255,.7);
+  --gold:#4FA7E0; --gold-2:#9FD4F4; --accent:#4FA7E0; --radius:22px;
+}
+[data-pal="sky"]{--sky-1:#BFE2FA;--sky-2:#DCF0FE;--sky-3:#F7FCFF;--water:#BEE3F5;--gold:#4FA7E0;--gold-2:#9FD4F4}
+[data-pal="aqua"]{--sky-1:#BFEDEC;--sky-2:#DBF6F5;--sky-3:#F6FDFD;--water:#B2E6E2;--gold:#2FA9A0;--gold-2:#8FDCD6}
+[data-pal="lilac"]{--sky-1:#D6DEFB;--sky-2:#E9EEFE;--sky-3:#FAFBFF;--water:#CBD6F7;--gold:#6E86E8;--gold-2:#AEBEF8}
+[data-pal="mist"]{--sky-1:#D9E9F0;--sky-2:#ECF5F9;--sky-3:#FBFDFE;--water:#CDE3EC;--gold:#6E93A8;--gold-2:#B6D2E0}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;color:var(--ink);font:400 17px/1.6 Manrope,system-ui,sans-serif;-webkit-font-smoothing:antialiased;background:var(--sky-3)}
+body::before{content:'';position:fixed;inset:0;z-index:-2;background:
+ linear-gradient(180deg,var(--sky-1) 0%,var(--sky-2) 30%,var(--sky-3) 54%,#fff 100%)}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.22;
+ background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E")}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.03em;line-height:1.06;text-wrap:balance}
+.wrap{max-width:min(1640px,92vw);margin:0 auto;padding-left:clamp(20px,3vw,48px);padding-right:clamp(20px,3vw,48px)}
+section{padding:clamp(52px,6vh,86px) 0;position:relative;z-index:2;background:transparent}
+.eyebrow{font:600 11px/1 Manrope;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+.chrome{position:relative;display:block;-webkit-text-stroke:0;text-shadow:none;
+ background:linear-gradient(170deg,#FFFFFF 0%,#FCFEFF 34%,#EDF7FC 58%,#D5EBF8 80%,#B9DDF3 100%);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 2px 3px rgba(70,124,162,.38)) drop-shadow(0 12px 20px rgba(70,124,162,.3)) drop-shadow(0 28px 44px rgba(70,124,162,.2))}
+
+.glass{background:var(--glass);backdrop-filter:blur(26px) saturate(1.25);border:1px solid rgba(255,255,255,.85);
+ border-radius:var(--radius);box-shadow:0 30px 70px -44px rgba(30,70,100,.5),inset 0 1px 0 rgba(255,255,255,.95),0 0 0 .5px rgba(120,165,195,.18)}
+
+/* ---------- nav ---------- */
+nav{position:fixed;inset:14px 14px auto 14px;z-index:60;display:flex;align-items:center;gap:2px;padding:9px 9px 9px 20px;
+ border-radius:18px;background:rgba(255,255,255,.58);backdrop-filter:blur(22px) saturate(1.4);
+ border:1px solid rgba(255,255,255,.75);box-shadow:0 12px 34px -24px rgba(20,35,50,.7)}
+nav .brand{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.1em;font-size:15px;margin-right:auto;text-transform:uppercase}
+nav .brand .orb{width:18px;height:18px;border-radius:50%;flex:none;
+ background:radial-gradient(circle at 34% 30%,#fff 0%,#CDE6F7 34%,#6FA9CE 62%,#39708F 100%);
+ box-shadow:inset 0 -2px 4px rgba(255,255,255,.55),0 2px 8px -2px rgba(45,110,150,.7)}
+nav .brand em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.14em;color:#fff;
+ background:linear-gradient(135deg,#3AA6E2,#7ACBF2);padding:3px 6px;border-radius:6px}
+nav a{white-space:nowrap;font-size:14px;font-weight:500;color:var(--muted);text-decoration:none;padding:9px 13px;border-radius:11px;transition:.18s}
+nav a:hover{color:var(--ink);background:rgba(255,255,255,.7)}
+nav .tg{background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff}
+nav .tg:hover{background:linear-gradient(135deg,#2E97D4,#63C0EE);color:#fff;filter:none}
+
+/* ---------- hero ---------- */
+.hero{height:420vh;position:relative;z-index:1}
+.hero .stick{--p:0;position:sticky;top:0;height:100vh;overflow:hidden;display:grid;place-items:center}
+.techgrid{position:absolute;inset:0;pointer-events:none;z-index:0;
+ background-image:linear-gradient(90deg,rgba(74,138,180,.34) 1px,transparent 1px),
+  linear-gradient(180deg,rgba(74,138,180,.26) 1px,transparent 1px);
+ background-size:76px 76px;
+ mask-image:radial-gradient(75% 60% at 50% 46%,#000 0%,rgba(0,0,0,.45) 52%,transparent 82%);
+ opacity:calc(.9 - var(--p,0)*.55);
+ transform:perspective(900px) rotateX(calc(1deg + var(--p,0)*7deg)) translateY(calc(var(--p,0)*-3%))}
+.horizon{position:absolute;left:0;right:0;bottom:34%;height:1px;z-index:0;pointer-events:none;
+ background:linear-gradient(90deg,transparent,rgba(255,255,255,.95) 18%,rgba(255,255,255,1) 50%,rgba(255,255,255,.95) 82%,transparent);
+ box-shadow:0 0 22px 3px rgba(255,255,255,.75);opacity:calc(.35 + var(--p,0)*.6)}
+.vign{position:absolute;inset:0;pointer-events:none;z-index:0;
+ background:radial-gradient(72% 62% at 50% 44%,transparent 40%,rgba(120,165,195,.22) 100%)}
+.heroVid{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;background:#E8F2FA;will-change:opacity}
+.heroLoad{position:absolute;inset:0;z-index:2;display:grid;place-items:center;gap:0;
+ background:center/cover no-repeat url(media/hero3-poster.jpg);filter:blur(8px) saturate(1.05);
+ transition:opacity .5s ease;animation:pulse 2.4s ease-in-out infinite}
+.heroLoad.gone{opacity:0;pointer-events:none;animation:none}
+.heroLoad i{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.45);
+ border-top-color:#fff;animation:spin 1s linear infinite;display:block}
+.heroLoad span{position:absolute;bottom:calc(50% - 56px);font:600 10px Manrope;letter-spacing:.3em;
+ text-transform:uppercase;color:rgba(255,255,255,.9)}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes pulse{50%{filter:blur(8px) saturate(1.05) brightness(1.06)}}
+@media (prefers-reduced-motion:reduce){.heroLoad,.heroLoad i{animation:none}}
+
+.clouds{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.clouds i{position:absolute;border-radius:50%;background:radial-gradient(circle at 40% 45%,#fff 0%,rgba(255,255,255,.8) 45%,rgba(255,255,255,0) 74%);
+ filter:blur(10px);opacity:.66}
+.clouds i:nth-child(1){left:-6%;top:14%;width:46vw;height:20vw;transform:translateX(calc(var(--p,0)*-14vw))}
+.clouds i:nth-child(2){right:-10%;top:6%;width:52vw;height:22vw;transform:translateX(calc(var(--p,0)*16vw))}
+.clouds i:nth-child(3){left:18%;top:40%;width:36vw;height:14vw;opacity:.6;transform:translateX(calc(var(--p,0)*-22vw))}
+.clouds i:nth-child(4){right:8%;top:52%;width:30vw;height:12vw;opacity:.55;transform:translateX(calc(var(--p,0)*20vw))}
+.drift{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden}
+.drift i{position:absolute;border-radius:50%;filter:blur(30px);opacity:.5;
+ background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0) 70%)}
+.drift i:nth-child(1){left:-8%;top:8%;width:40vw;height:16vw;animation:float1 46s ease-in-out infinite}
+.drift i:nth-child(2){right:-6%;top:34%;width:34vw;height:14vw;animation:float2 58s ease-in-out infinite}
+.drift i:nth-child(3){left:22%;bottom:6%;width:44vw;height:16vw;animation:float1 68s ease-in-out infinite reverse}
+@keyframes float1{50%{transform:translate(6vw,-2vw)}}
+@keyframes float2{50%{transform:translate(-7vw,3vw)}}
+.sun{position:absolute;left:50%;bottom:calc(26% + var(--p,0) * 14%);translate:-50% 50%;
+ width:clamp(180px,26vw,320px);aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(circle,var(--gold-2) 0%,var(--gold) 38%,transparent 70%);
+ opacity:calc(.28 + var(--p,0)*.42);filter:blur(calc(10px + var(--p,0)*6px))}
+.sea{position:absolute;left:0;right:0;bottom:0;height:34%;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--water) 55%,transparent),color-mix(in srgb,var(--water) 92%,#7FC4E4));
+ mask-image:linear-gradient(180deg,transparent,#000 22%)}
+.sea::after{content:'';position:absolute;left:50%;translate:-50% 0;top:0;width:min(30vw,340px);height:100%;
+ background:linear-gradient(180deg,color-mix(in srgb,var(--gold-2) 85%,transparent),transparent 75%);opacity:calc(.3+var(--p,0)*.5);filter:blur(10px)}
+.arc{position:absolute;left:-10%;top:-16%;width:min(58vw,700px);height:128%;
+ border-radius:0 100% 60% 0 / 0 60% 100% 0;
+ background:linear-gradient(140deg,#fff,#EFF8FE 40%,#CFE8F8 70%,#fff);
+ opacity:.95;filter:drop-shadow(-10px 30px 70px rgba(80,140,180,.22));
+ transform:translate3d(calc(var(--p,0)*-16%),calc(var(--p,0)*6%),0) rotate(calc(var(--p,0)*-5deg)) scale(calc(1 + var(--p,0)*.12))}
+
+.orbGhost{position:absolute;left:50%;top:46%;translate:-50% -50%;z-index:-1;pointer-events:none;
+ width:clamp(280px,36vw,560px);aspect-ratio:1;border-radius:50%;opacity:.5;
+ background:radial-gradient(circle at 36% 30%,rgba(255,255,255,.95) 0%,rgba(236,247,253,.75) 18%,
+   rgba(198,228,245,.5) 44%,rgba(158,203,231,.32) 66%,rgba(140,190,222,0) 82%);
+ filter:blur(2px);animation:orbFloat 9s ease-in-out infinite}
+@keyframes orbFloat{50%{transform:translateY(-8px)}}
+@media (prefers-reduced-motion:reduce){.orbGhost{animation:none}}
+.brandmark{position:relative;display:inline-block;cursor:default}
+
+.hero-c{position:relative;text-align:center;padding:0 22px;z-index:5;opacity:0;will-change:opacity;isolation:isolate;transform:translateY(6vh);
+ transform:translateY(calc(var(--p,0)*-52px));opacity:calc(1 - max(0,var(--p,0)-.72)*3)}
+.kicker{font:600 12px Manrope;letter-spacing:.42em;text-transform:uppercase;color:rgba(18,23,28,.55)}
+.word{font-size:clamp(54px,13vw,190px);font-weight:700;letter-spacing:-.005em;line-height:.88;margin:0}
+.word-sub{font-size:clamp(24px,5.1vw,74px);font-weight:600;letter-spacing:.38em;line-height:1.2;margin:12px 0 0;padding:0 0 .12em .38em;
+ -webkit-text-stroke:0;text-shadow:none;
+ background:linear-gradient(170deg,#FFFFFF 0%,#FAFDFF 42%,#E9F5FC 72%,#CDE6F7 100%);
+ -webkit-background-clip:text;background-clip:text;color:transparent;
+ filter:drop-shadow(0 2px 3px rgba(84,136,175,.26)) drop-shadow(0 10px 18px rgba(84,136,175,.2))}
+.tagline{font:600 12px Manrope;letter-spacing:.34em;text-transform:uppercase;color:rgba(18,23,28,.5)}
+.hero h1{font-size:clamp(12px,1.62vw,21px);font-weight:500;margin:26px 0 0;letter-spacing:.005em;color:#3C4750;white-space:nowrap;line-height:1.35}
+.hero h1 span{display:inline-block;margin-top:10px;color:inherit;font-size:1em}
+.hero p{color:#6C7A84;max-width:540px;margin:22px auto 34px;font-size:17px}
+/* кадр видео: повторяет геометрию object-fit:cover, чтобы текст и кнопка стояли на своих местах в ролике */
+.vframe{position:absolute;z-index:6;left:50%;top:50%;width:max(100vw,calc(100vh*16/9));aspect-ratio:16/9;transform:translate(-50%,-50%);pointer-events:none;container-type:inline-size}
+.hook{position:absolute;left:12.2%;top:50%;transform:translateY(-50%);margin:0;font:600 5.7cqw/1 Oswald,'Bebas Neue',Impact,sans-serif;text-transform:uppercase;
+ letter-spacing:.005em;color:#141414;will-change:opacity}
+.scrubnote{position:absolute;left:50.8%;top:50%;width:17%;aspect-ratio:1;border-radius:50%;display:grid;place-items:center;
+ transform:translate(-50%,-50%);will-change:transform,opacity;
+ background:rgba(255,255,255,.14);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+ border:2px solid rgba(215,218,222,.9);box-shadow:0 10px 40px -20px rgba(0,0,0,.25)}
+.scrubnote span{font:500 1.6cqw Montserrat,Manrope,system-ui,sans-serif;color:#141414;white-space:nowrap;letter-spacing:-.01em}
+.hero .vframe .cap{position:absolute;margin:0;max-width:none;opacity:0;will-change:opacity,transform;text-transform:uppercase;font-family:Oswald,'Bebas Neue',Impact,sans-serif;font-weight:600;line-height:1.02}
+.hero .vframe .cap1{--dy:0px;transform:translateY(calc(-50% + var(--dy)));left:12.2%;top:50%;font-size:3.4cqw;color:#141414;letter-spacing:.005em}
+.hero .stick>.cap2{position:absolute;z-index:6;left:clamp(20px,5vw,90px);top:calc(50% + 34px);margin:0;max-width:none;
+ opacity:0;--dy:0px;transform:translateY(calc(-50% + var(--dy)));pointer-events:none;
+ font:600 min(calc((100vh - 150px)/4.7), 7.4vw)/.93 Oswald,'Bebas Neue',Impact,sans-serif;text-transform:uppercase;letter-spacing:.005em;
+ color:#fff;text-shadow:0 4px 40px rgba(20,45,70,.4),0 1px 4px rgba(20,45,70,.3)}
+.hero .stick>.cap2shade{position:absolute;inset:0;z-index:5;opacity:0;pointer-events:none;
+ background:linear-gradient(90deg,rgba(12,28,44,.62) 0%,rgba(12,28,44,.42) 32%,rgba(12,28,44,.12) 55%,rgba(12,28,44,0) 70%)}
+@media (max-width:760px){.hero .stick>.cap2shade{background:linear-gradient(180deg,rgba(12,28,44,.1) 10%,rgba(12,28,44,.5) 38%,rgba(12,28,44,.5) 62%,rgba(12,28,44,.1) 85%)}}
+@media (max-width:760px){.hero .stick>.cap2{left:20px;font-size:min(calc((100vh - 150px)/3.75), calc((100vw - 40px)/6.6))}}
+@media (max-width:760px){
+ .hero .vframe .cap1{transform:translateY(var(--dy));left:calc(57% + 22px);top:calc(50% - 50vh + 96px);font-size:clamp(26px,7.6vw,36px);text-shadow:0 0 22px rgba(255,255,255,.95),0 0 4px rgba(255,255,255,.95)}
+}
+@media (max-width:760px){
+ .vframe{left:0;transform:translate(-57%,-50%)}
+ .heroVid{object-position:79% 50%}   /* тот же сдвиг, что у .vframe: 0.57·W = 0.79·(W−100vw) при W=100vh·16/9 */
+ .hook{left:calc(57% + 22px);top:calc(50% - 50vh + 96px);transform:none;font-size:clamp(44px,13vw,60px);
+  text-shadow:0 0 22px rgba(255,255,255,.95),0 0 4px rgba(255,255,255,.95)}
+ .scrubnote{left:calc(57% + 50vw);top:calc(50% + 50vh - 110px);width:118px}
+ .scrubnote span{font-size:13px}
+ .scrubnote{background:rgba(255,255,255,.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-color:rgba(255,255,255,.95)}
+}
+}
+@media (prefers-reduced-motion:reduce){.scrubnote i{animation:none}}
+.hero-slots{display:none;position:absolute;inset:auto 0 7% 0;gap:14px;justify-content:center;z-index:4;
+ opacity:0;transform:translateY(40px);transition:opacity .5s ease,transform .5s ease;pointer-events:none}
+.hero-slots.show{display:none}
+.slot{width:clamp(88px,11vw,150px);aspect-ratio:3/4;border-radius:16px;
+ background:linear-gradient(150deg,rgba(255,255,255,.75),rgba(255,255,255,.35));backdrop-filter:blur(12px);
+ border:1px solid rgba(255,255,255,.8);display:grid;place-items:center;text-align:center;
+ font:500 11px Manrope;color:var(--muted);padding:10px;box-shadow:0 20px 40px -28px rgba(20,35,50,.8)}
+
+/* ---------- buttons ---------- */
+.btn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:10px;border:0;cursor:pointer;font:600 16px Manrope;
+ padding:18px 32px;border-radius:14px;color:#fff;background:linear-gradient(135deg,#3AA6E2,#7ACBF2);
+ box-shadow:0 18px 34px -18px rgba(58,166,226,.95),inset 0 1px 0 rgba(255,255,255,.5);
+ transition:transform .2s cubic-bezier(.34,1.56,.64,1),filter .16s}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.1) saturate(1.08);box-shadow:0 22px 40px -18px rgba(58,166,226,1)}.btn:active{transform:scale(.96)}
+.btn.gold{background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff;box-shadow:0 18px 34px -18px rgba(58,166,226,.95)}
+.btn.ghost{background:rgba(255,255,255,.7);color:var(--ink);border:1px solid rgba(255,255,255,.9);box-shadow:0 10px 26px -20px rgba(20,35,50,.8)}
+.btn.sm{padding:12px 18px;font-size:14px;border-radius:11px}
+
+/* ---------- section head ---------- */
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:28px;flex-wrap:wrap;margin-bottom:38px}
+.head h2{font-size:clamp(30px,4.4vw,58px);font-weight:600}
+.head .idx{font:700 13px Manrope;letter-spacing:.2em;color:var(--muted)}
+
+/* ---------- about ---------- */
+.about{display:grid;grid-template-columns:minmax(320px,.9fr) 1.3fr;gap:0;overflow:hidden;align-items:stretch}
+.about .photo{width:100%;height:100%;min-height:clamp(320px,34vw,520px);object-fit:cover;object-position:50% 26%;display:block;background:linear-gradient(160deg,#E2F2FB,#B9DDF2)}
+.about .txt{padding:clamp(28px,3.4vw,56px)}
+.about h2{font-size:clamp(28px,3.4vw,44px);margin:14px 0 18px}
+.about p{color:var(--muted);max-width:66ch;text-wrap:pretty;margin:0 0 14px}
+.about p b{color:var(--ink);font-weight:600}
+.about p:last-of-type{margin-bottom:0}
+.about .lead-out{color:var(--ink);font-weight:500}
+.nichelabel{margin-top:30px;font:600 11px Manrope;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
+.marquee{margin-top:14px;overflow:hidden;mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.marquee div{display:flex;gap:10px;width:max-content;animation:run 52s linear infinite}
+.marquee:hover div{animation-play-state:paused}
+.marquee span{font-size:13px;font-weight:500;color:var(--muted);background:rgba(255,255,255,.7);
+ border:1px solid var(--line);border-radius:10px;padding:8px 14px;white-space:nowrap}
+@keyframes run{to{transform:translateX(-50%)}}
+.revs{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,1.6vw,28px);margin-top:clamp(20px,2.4vw,34px)}
+.rev{aspect-ratio:3/4;display:grid;place-items:center;color:var(--muted);font-size:13px;text-align:center;padding:18px}
+
+/* ---------- plan ---------- */
+.plan{position:relative;border-radius:30px;padding:clamp(40px,5.4vw,84px) clamp(24px,4vw,64px);color:var(--ink);overflow:hidden;
+ background:linear-gradient(168deg,#FDFEFF 0%,#F3F8FC 38%,#E6EFF6 72%,#EFF5FA 100%);
+ border:1px solid rgba(255,255,255,.95);
+ box-shadow:
+   0 1px 0 rgba(255,255,255,1) inset,
+   0 -1px 0 rgba(150,180,205,.22) inset,
+   0 40px 80px -46px rgba(46,96,135,.55),
+   0 2px 6px -2px rgba(46,96,135,.18)}
+.plan::after{content:'';z-index:0;pointer-events:none;position:absolute;right:-12%;top:-40%;width:70%;aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(circle,#fff 0%,rgba(255,255,255,0) 64%);opacity:.55}
+.plan .in{position:relative;z-index:1;display:grid;grid-template-columns:1fr auto;gap:40px;align-items:center}
+.plan .btn{background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff;border:0;
+ font-size:clamp(17px,1.5vw,20px);font-weight:600;
+ padding:clamp(22px,2.4vw,28px) clamp(38px,4vw,58px);border-radius:16px;
+ box-shadow:0 20px 40px -18px rgba(58,166,226,.9), 0 2px 0 rgba(255,255,255,.4) inset}
+.plan .btn:hover{transform:translateY(-2px);filter:brightness(1.06);
+ box-shadow:0 26px 48px -18px rgba(58,166,226,1)}
+.plan .btn:active{transform:scale(.97)}
+.plan h2{font-size:clamp(28px,3.8vw,50px)}
+.plan p{color:#53687A;margin:16px 0 0;max-width:58ch}
+.steps{display:flex;gap:8px;margin-top:26px;flex-wrap:wrap}
+.steps span{font-size:13px;font-weight:500;color:#3E5A70;background:rgba(255,255,255,.85);border:1px solid rgba(255,255,255,1);
+ box-shadow:0 2px 6px -3px rgba(46,96,135,.5);border-radius:999px;padding:8px 15px}
+
+/* ---------- services ---------- */
+.tabs{display:flex;gap:4px;background:rgba(255,255,255,.55);padding:5px;border-radius:14px;border:1px solid rgba(255,255,255,.8)}
+.tab{font:600 14px Manrope;padding:11px 18px;border-radius:10px;border:0;background:none;cursor:pointer;color:var(--muted);transition:.16s}
+.tab[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 6px 16px -10px rgba(20,35,50,.8)}
+.lente{display:flex;align-items:stretch;gap:22px;overflow-x:auto;scroll-snap-type:x mandatory;padding:8px clamp(20px,3vw,48px) 30px;margin-left:calc(-1*clamp(20px,3vw,48px));margin-right:calc(-1*clamp(20px,3vw,48px));scrollbar-width:none}
+.lente::-webkit-scrollbar{display:none}
+.card{flex:0 0 clamp(320px,24vw,420px);scroll-snap-align:start;padding:0;display:flex;flex-direction:column;overflow:hidden}
+.card .shot{aspect-ratio:16/11;background:linear-gradient(150deg,#E4F3FB,#BFE1F4);display:grid;place-items:center;
+ color:#fff;font-size:12px;text-align:center;padding:14px;position:relative;text-shadow:0 1px 5px rgba(0,0,0,.35)}
+.card .shot b{position:absolute;left:16px;top:14px;font:800 30px Manrope;letter-spacing:-.04em;color:rgba(255,255,255,.75);text-shadow:none}
+.card .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card h3{font-size:22px}
+.card ul{margin:0;padding-left:18px;color:var(--muted);font-size:15px}
+.card ul li{margin-bottom:4px}
+.card .foot{margin-top:auto;padding-top:16px;border-top:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:12px}
+.card .price{font:700 18px Manrope;letter-spacing:-.02em}
+.scroll-hint{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px;margin-top:4px}
+
+
+/* ---------- карточки услуг ---------- */
+.lente{align-items:stretch}
+.pcard{flex:0 0 clamp(270px,21vw,330px);padding:0;overflow:hidden;display:grid;grid-template-rows:auto 1fr}
+.pcard .shot{aspect-ratio:4/3;position:relative}
+.pcard .shot b{position:absolute;left:16px;top:12px;font:800 28px Manrope;letter-spacing:-.04em;
+ color:rgba(255,255,255,.8);text-shadow:none}
+.pcard .body{padding:20px 22px 22px;display:flex;flex-direction:column;gap:0;min-height:0}
+.pcard h3{font-size:clamp(18px,1.55vw,21px);line-height:1.2;margin-bottom:6px}
+.pcard .price{font:700 clamp(17px,1.5vw,20px) Manrope;color:#2E8FC8;font-variant-numeric:tabular-nums;margin-bottom:10px}
+.pcard .psub{color:var(--muted);font-size:14px;line-height:1.45;margin:0 0 18px}
+.pcard .btn{margin-top:auto;width:100%;justify-content:center}
+
+summary:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
+.pcard .shot{aspect-ratio:4/5}
+.shot.gal{padding:0;overflow:hidden;display:block;background:#DCEBF5}
+.gtrack{display:flex;width:100%;height:100%;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;border-radius:inherit}
+.gtrack::-webkit-scrollbar{display:none}
+.gtrack video{flex:0 0 100%;width:100%;height:100%;object-fit:cover;scroll-snap-align:start;display:block}
+.gtrack img{flex:0 0 100%;width:100%;height:100%;object-fit:cover;object-position:center top;scroll-snap-align:start;display:block}
+.gdots{position:absolute;left:0;right:0;bottom:12px;display:flex;justify-content:center;gap:6px;pointer-events:none}
+.gdots i{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.55);box-shadow:0 1px 4px rgba(0,0,0,.25);transition:.2s}
+.gdots i.on{background:#fff;width:18px;border-radius:3px}
+.shot.gal b{z-index:2}
+.shot.phone{padding:0;display:grid;place-items:center;overflow:hidden;background:radial-gradient(120% 90% at 50% 20%,#F4FAFE 0%,#D6ECF8 55%,#B9DDF2 100%)}
+.shot.phone b{z-index:3}
+.iphone{position:absolute;top:5%;bottom:17%;left:50%;transform:translateX(-50%);aspect-ratio:590/1220;border-radius:clamp(18px,2.2vw,28px);padding:5px;box-sizing:border-box;
+ background:linear-gradient(145deg,#2a2f35,#0e1114);box-shadow:0 24px 40px -18px rgba(20,50,80,.55),inset 0 0 0 1.5px rgba(255,255,255,.14)}
+.iphone video{display:block;width:100%;height:100%;object-fit:cover;border-radius:calc(clamp(18px,2.2vw,28px) - 5px);background:#fff}
+.iphone .island{position:absolute;z-index:2;top:9px;left:50%;transform:translateX(-50%);width:30%;height:3.2%;border-radius:99px;background:#0b0d10}
+.tryapp{position:absolute;z-index:4;left:50%;bottom:5%;transform:translateX(-50%);white-space:nowrap;text-decoration:none;
+ font:600 13px Manrope;color:#1E4E6E;padding:9px 16px;border-radius:999px;background:rgba(255,255,255,.62);
+ border:1px solid rgba(255,255,255,.9);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+ box-shadow:0 10px 24px -12px rgba(20,60,90,.5);transition:.16s}
+.tryapp:hover{background:#fff;color:#2E7FB4}
+.tryapp span{display:inline-block;margin-left:2px}
+.soonpill{padding:10px 22px;border-radius:999px;background:rgba(255,255,255,.38);border:1px solid rgba(255,255,255,.75);
+ backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font:600 13px Manrope;letter-spacing:.22em;text-transform:uppercase;
+ color:#2E6F97;text-shadow:none;box-shadow:0 6px 20px -8px rgba(40,100,140,.35)}
+.shot.split{padding:0;display:flex;flex-direction:column;justify-content:space-between;background:#EFE8DF;overflow:hidden}
+.shot.split>video,.shot.split>img{width:100%;aspect-ratio:16/9;object-fit:cover;display:block;border-radius:10px}
+.shot.split>video{border-radius:inherit;border-bottom-left-radius:10px;border-bottom-right-radius:10px}
+.shot.split b{z-index:2}
+.snd{position:absolute;right:12px;bottom:12px;z-index:3;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.5);
+ background:rgba(255,255,255,.28) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H3v6h3l5 4z'/%3E%3Cpath d='m23 9-6 6M17 9l6 6'/%3E%3C/svg%3E") center/18px no-repeat;
+ backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18);transition:.15s}
+.snd:hover{background-color:rgba(255,255,255,.42)}
+.snd.on{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H3v6h3l5 4z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14'/%3E%3C/svg%3E")}
+/* ---------- edu ---------- */
+.edu{padding:0;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr}
+.edu .l{padding:clamp(30px,3.6vw,60px) clamp(24px,3.2vw,54px)}
+.edu h2{font-size:clamp(28px,3.8vw,48px);margin:14px 0 12px}
+.edu .lead{color:var(--muted);margin:0 0 30px;max-width:62ch;text-wrap:pretty}
+.edu-intro{color:var(--ink);font-weight:500;margin:0 0 6px}
+.bonuses{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.bonuses span{font:600 13px Manrope;color:#2E7FB4;background:rgba(122,203,242,.18);
+ border:1px solid rgba(122,203,242,.5);border-radius:999px;padding:9px 16px}
+.tl details{border-top:1px solid var(--line)}
+.tl details:last-of-type{border-bottom:1px solid var(--line)}
+.tl summary{display:grid;grid-template-columns:52px 1fr auto;gap:18px;align-items:center;padding:18px 0;cursor:pointer;list-style:none}
+.tl summary::-webkit-details-marker{display:none}
+.tl summary::after{content:'';width:26px;height:12px;flex:none;margin-right:4px;border:0;
+ background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 12'%3E%3Cpath d='M1 6h22M18 1.5 23 6l-5 4.5' fill='none' stroke='%234FA7E0' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat;
+ transition:transform .26s cubic-bezier(.4,0,.2,1)}
+.tl details[open]>summary::after{transform:rotate(90deg)}
+.tl summary span{font-weight:600;font-size:17px;color:var(--ink)}
+.tl details p{margin:0 0 20px 70px;color:var(--muted);font-size:15px;max-width:60ch}
+.edu-out{margin:24px 0 0;color:var(--muted)}
+.edu-out b{color:var(--ink);font-weight:600}
+.tl div{display:grid;grid-template-columns:52px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line);align-items:start}
+.tl b{font:800 14px Manrope;color:var(--gold);letter-spacing:.06em}
+.tl p{margin:0;color:var(--muted);font-size:15px}
+.edu .r{background:linear-gradient(160deg,#DCF0FB,#A9D6EE);display:grid;place-items:center;color:#fff;
+ text-align:center;padding:30px;font-size:13px;text-shadow:0 1px 6px rgba(0,0,0,.3)}
+
+.chcard{margin-top:clamp(28px,3.4vw,46px);text-align:center;padding:clamp(28px,3.4vw,46px) 24px;
+ border:1px solid var(--line);border-radius:26px;background:linear-gradient(170deg,#FDFEFF,#F2F8FC)}
+.chcard h3{font-size:clamp(20px,2.2vw,27px);margin-bottom:10px}
+.chcard p{color:var(--muted);margin:0 auto 22px;max-width:46ch}
+.chbtn{display:inline-flex;align-items:center;gap:10px;text-decoration:none;
+ font:600 16px Manrope;color:#2E8FC8;padding:16px 30px;border-radius:999px;
+ border:1.5px solid rgba(58,166,226,.55);background:rgba(255,255,255,.7);
+ transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .16s,border-color .16s}
+.chbtn:hover{background:rgba(58,166,226,.1);border-color:#3AA6E2;transform:translateY(-2px)}
+.chbtn:active{transform:scale(.97)}
+.certquote{position:relative;margin:0 0 34px;padding:4px 0 4px 26px;border-left:2px solid #7ACBF2;
+ max-width:66ch;color:var(--muted);font-size:clamp(16px,1.35vw,19px);line-height:1.6;text-wrap:pretty}
+.certquote b{color:var(--ink);font-weight:600}
+.certs{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(14px,1.6vw,24px)}
+.cert{margin:0;padding:12px;display:flex;flex-direction:column;gap:12px}
+.cert img{width:100%;aspect-ratio:4/3;object-fit:cover;object-position:50% 40%;border-radius:14px;display:block;
+ transition:transform .3s ease}
+.cert:hover img{transform:scale(1.03)}
+.cert figcaption{font:500 13px/1.35 Manrope;color:var(--muted);padding:0 4px 4px;text-align:center}
+@media(max-width:900px){.certs{grid-template-columns:repeat(2,1fr)}}
+
+.tgband-wrap{padding-top:clamp(20px,2vh,32px)}
+.finalcta{margin:clamp(44px,5vw,72px) auto 0;text-align:center;max-width:640px}
+.finalcta h2{font-size:clamp(24px,2.8vw,34px);margin-bottom:10px}
+.finalcta p{color:var(--muted);margin:0 auto;max-width:46ch}
+.finalbtn{margin-top:22px;background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff;
+ font-size:16px;padding:17px 34px;border-radius:14px;box-shadow:0 16px 32px -18px rgba(58,166,226,.9)}
+.finalfine{margin-top:14px !important;font-size:13px;color:var(--muted)}
+.tgband{position:relative;border-radius:30px;overflow:hidden;padding:clamp(40px,5vw,72px) clamp(24px,4vw,64px);
+ background:linear-gradient(168deg,#FDFEFF 0%,#F3F8FC 38%,#E6EFF6 72%,#EFF5FA 100%);
+ border:1px solid rgba(255,255,255,.95);
+ box-shadow:0 1px 0 rgba(255,255,255,1) inset,0 -1px 0 rgba(150,180,205,.22) inset,
+   0 40px 80px -46px rgba(46,96,135,.55),0 2px 6px -2px rgba(46,96,135,.18)}
+.tgband::after{content:'';position:absolute;right:-12%;top:-58%;width:66%;aspect-ratio:1;border-radius:50%;z-index:0;
+ background:radial-gradient(circle,#fff,rgba(255,255,255,0) 64%);opacity:.6;pointer-events:none}
+.tgband-in{position:relative;z-index:1;text-align:center;max-width:680px;margin:0 auto}
+.tgband h2{font-size:clamp(26px,3.2vw,42px);margin:12px 0 12px}
+.tgband p{color:var(--muted);margin:0 auto;max-width:52ch}
+.tgbtn{margin-top:26px;background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff;
+ font-size:clamp(16px,1.5vw,19px);padding:clamp(20px,2.2vw,26px) clamp(34px,3.6vw,52px);border-radius:16px;
+ box-shadow:0 20px 40px -18px rgba(58,166,226,.95)}
+.tgfine{margin-top:16px !important;font-size:13px;color:var(--muted)}
+
+/* ---------- faq ---------- */
+.faqhead{text-align:center;margin-bottom:clamp(24px,3vw,38px)}
+.faqhead h2{margin-top:14px;font-size:clamp(28px,3.6vw,46px)}
+.faqtabs{display:flex;gap:4px;justify-content:center;margin:0 auto clamp(22px,2.6vw,34px);
+ background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.9);padding:5px;border-radius:16px;width:max-content;
+ box-shadow:0 10px 26px -20px rgba(40,96,135,.6)}
+.ftab{font:600 15px Manrope;padding:12px 22px;border:0;border-radius:12px;background:none;color:var(--muted);cursor:pointer;transition:.16s}
+.ftab[aria-selected=true]{background:#fff;color:var(--ink);box-shadow:0 6px 16px -10px rgba(40,96,135,.7)}
+.faq{max-width:900px;margin:0 auto}
+.faq .q-learn{display:none}
+.faq details{border:1px solid rgba(255,255,255,.9);border-radius:22px;margin-bottom:12px;
+ background:linear-gradient(170deg,rgba(255,255,255,.82),rgba(244,250,253,.78));
+ backdrop-filter:blur(14px);box-shadow:0 14px 34px -26px rgba(40,96,135,.5);
+ padding:0 clamp(18px,2vw,28px);transition:box-shadow .2s,border-color .2s}
+.faq details:hover{box-shadow:0 18px 40px -24px rgba(40,96,135,.6)}
+.faq details[open]{box-shadow:0 20px 44px -24px rgba(40,96,135,.55)}
+.faq details:last-of-type{margin-bottom:0}
+.faq summary{cursor:pointer;font-size:clamp(16px,1.5vw,19px);font-weight:500;list-style:none;
+ display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 0}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:'';width:11px;height:11px;flex:none;
+ border-right:2px solid #4FA7E0;border-bottom:2px solid #4FA7E0;
+ transform:rotate(45deg) translateY(-2px);transition:transform .22s ease}
+.faq details[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+.faq p{color:var(--muted);margin:0 0 20px;max-width:70ch;text-wrap:pretty}
+.final{text-align:center;padding:96px 0 0}
+.final .word2{font-size:clamp(40px,8vw,110px);font-weight:700;letter-spacing:.02em;line-height:1}
+.final h2{font-size:clamp(24px,2.8vw,36px);font-weight:500;margin:26px 0 26px}
+footer{border-top:1px solid var(--line);margin-top:86px;padding:48px 0 32px;color:var(--muted);font-size:15px;
+ display:grid;grid-template-columns:minmax(260px,1fr) auto;gap:clamp(24px,4vw,56px);align-items:start}
+.fcol{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+footer>.fcol:nth-of-type(2){align-items:flex-end;text-align:right}
+@media(max-width:900px){footer>.fcol:nth-of-type(2){align-items:flex-start;text-align:left}}
+.fcol h4{margin:0 0 4px;font:600 11px Manrope;letter-spacing:.24em;text-transform:uppercase;color:#8A9AA8}
+.fcol a{color:var(--muted);text-decoration:none;transition:.15s}
+.fcol a:hover{color:#2E7FB4}
+.fbrand p{margin:0;max-width:38ch;line-height:1.5}
+.fname{color:var(--ink);font-weight:500}
+.fmark{display:flex;align-items:center;gap:9px;font-weight:800;letter-spacing:.1em;font-size:15px;
+ text-transform:uppercase;color:var(--ink);margin-bottom:4px}
+.fmark .orb{width:18px;height:18px;border-radius:50%;flex:none;
+ background:radial-gradient(circle at 34% 30%,#fff 0%,#CDE6F7 34%,#6FA9CE 62%,#39708F 100%);
+ box-shadow:inset 0 -2px 4px rgba(255,255,255,.55),0 2px 8px -2px rgba(45,110,150,.7)}
+.fmark em{font-style:normal;font-size:10px;font-weight:700;letter-spacing:.14em;color:#fff;
+ background:linear-gradient(135deg,#3AA6E2,#7ACBF2);padding:3px 6px;border-radius:6px}
+.fplan{margin-top:10px;background:none;border:1px solid var(--line);border-radius:12px;padding:12px 18px;
+ font:600 14px Manrope;color:#2E7FB4;cursor:pointer;transition:.16s}
+.fplan:hover{border-color:#7ACBF2;background:rgba(122,203,242,.1)}
+.fbottom{grid-column:1/-1;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;
+ border-top:1px solid var(--line);margin-top:16px;padding-top:20px;font-size:13px;color:#8A9AA8}
+.finalnote{color:var(--muted);font-size:14px;margin:16px 0 0}
+@media(max-width:900px){footer{grid-template-columns:1fr;gap:28px}}
+
+/* ---------- quiz ---------- */
+.ov{position:fixed;inset:0;z-index:100;background:rgba(18,28,38,.55);backdrop-filter:blur(12px);display:none;place-items:center;padding:20px}
+.ov.on{display:grid}
+.quiz{background:#fff;border-radius:26px;width:min(680px,100%);max-height:90vh;overflow:auto;padding:42px;
+ box-shadow:0 60px 120px -50px rgba(10,20,30,.9)}
+.qtop{font:600 11px Manrope;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.qbar{height:4px;background:var(--line);border-radius:2px;margin-bottom:26px}
+.qbar i{display:block;height:100%;background:linear-gradient(90deg,var(--gold),var(--gold-2));border-radius:2px;transition:width .35s}
+.quiz h3{font-size:30px;margin-bottom:24px}
+.opts{display:grid;gap:9px}
+.opt{display:block;width:100%;text-align:left;font:500 16px Manrope;padding:16px 20px;border:1px solid var(--line);
+ border-radius:14px;background:none;cursor:pointer;transition:.16s;color:var(--ink)}
+.opt-t{display:block}
+.opt-r{display:block;margin-top:7px;font:400 14px/1.45 Manrope;color:#2E7FB4}
+.opt:hover{border-color:var(--gold);transform:translateX(3px)}
+.opt.sel{border-color:var(--gold);background:color-mix(in srgb,var(--gold) 12%,transparent)}
+.qfoot{display:flex;justify-content:space-between;align-items:center;margin-top:26px;gap:12px}
+.qclose{position:absolute;top:22px;right:26px;background:none;border:0;font-size:28px;color:#fff;cursor:pointer}
+.res .line{padding:16px 0;border-bottom:1px solid var(--line)}
+.res b{display:block;font:700 11px Manrope;letter-spacing:.2em;text-transform:uppercase;color:#2E7FB4;margin-bottom:6px}
+.reslist{margin:20px 0 0;display:grid;gap:8px}
+.reslist div{font:400 15px/1.5 Manrope;color:var(--muted);padding-left:16px;position:relative}
+.reslist div::before{content:'';position:absolute;left:0;top:9px;width:6px;height:6px;border-radius:50%;background:#7ACBF2}
+.resnote{color:var(--ink);font-weight:500;margin:18px 0 0}
+.rescard{border:1px solid var(--line);border-radius:22px;padding:clamp(24px,3vw,38px);margin-top:4px;
+ background:linear-gradient(170deg,#FBFDFF,#F1F8FD);text-align:center}
+.rescard.second{margin-top:16px;background:#FAFCFE}
+.rescard h3{font-size:clamp(21px,2.2vw,27px);margin-bottom:10px}
+.resicon{width:50px;height:50px;margin:0 auto 16px;border-radius:16px;display:grid;place-items:center;
+ background:linear-gradient(135deg,#3AA6E2,#7ACBF2);color:#fff;font-size:22px;font-weight:700;
+ box-shadow:0 12px 26px -12px rgba(58,166,226,.9)}
+.reslead{color:var(--muted);margin:0 auto 20px;max-width:46ch}
+.rescard .res{text-align:left;margin-bottom:24px}
+.resmain{width:100%;font-size:clamp(16px,1.5vw,18px);padding:20px 28px}
+.resmain span,.rescard .ghost span{margin-left:6px}
+.resfine{font-size:13px;color:var(--muted);margin:14px 0 0}
+.resfine a{color:#2E7FB4;font-weight:600;text-decoration:none;border-bottom:1px solid rgba(46,127,180,.35)}
+.rescard .ghost{width:100%;padding:16px 24px}
+.restart{display:block;margin:18px auto 0;background:none;border:0;cursor:pointer;
+ font:500 13px Manrope;color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+
+/* ---------- preview ctrl ---------- */
+
+@media(max-width:920px){
+ .about{grid-template-columns:minmax(0,1fr)}
+ .about .photo{min-height:0;height:auto;aspect-ratio:4/5}.about .txt{padding:28px 22px}
+ .revs{grid-template-columns:1fr}.edu{grid-template-columns:1fr}.edu .l{padding:30px 22px}.edu .r{min-height:200px}
+ .plan{padding:38px 24px}.plan .in{grid-template-columns:1fr}
+ nav a:not(.tg){display:none}
+ .wrap{padding-left:20px;padding-right:20px}section{padding:64px 0}
+ .lente{padding:8px 20px 26px;margin-left:-20px;margin-right:-20px}.card{flex:0 0 80%}
+ .btn{width:100%}.hero{height:340vh}.hero-slots{display:none}
+ .hero h1{white-space:normal;font-size:16px;line-height:1.4;max-width:330px;margin:20px auto 0}
+ .hero-c{transform:translateY(3vh)}
+}
+</style>
+</head>
+<body data-pal="sky">
+
+
+<div class="drift"><i></i><i></i><i></i></div>
+
+<nav>
+  <span class="brand"><i class="orb"></i>BALANCE<em>AI</em></span>
+  <a href="#about">Обо мне</a><a href="#svc">Услуги</a><a href="#edu">Обучение</a><a href="#faq">Вопросы</a>
+  <a class="tg" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg(MSG.info)">Telegram</a>
+</nav>
+
+<div class="hero"><div class="stick">
+  <video class="heroVid" muted playsinline webkit-playsinline preload="auto" poster="media/hero3-poster.jpg"></video>
+  <div class="heroLoad" id="heroLoad"><i></i><span>Загружаем</span></div>
+  <div class="clouds"><i></i><i></i><i></i><i></i></div>
+  <div class="techgrid"></div>
+  <div class="horizon"></div>
+  <div class="vign"></div>
+  <div class="hero-c">
+    <div class="orbGhost"></div>
+    <div class="brandmark">
+      <div class="word chrome" data-text="BALANCE">BALANCE</div>
+      <div class="word-sub chrome" data-text="SYSTEM">SYSTEM</div>
+    </div>
+    <h1>Внедряем систему с ИИ в работу и жизнь<br><span>для брендов, бизнеса и экспертов</span></h1>
+    <div style="margin-top:30px"><button class="btn gold" onclick="openQuiz()">Получить пошаговый план</button></div>
+  </div>
+  <div class="cap2shade"></div>
+  <p class="cap2">добро<br>пожаловать<br>в Balance<br>AI</p>
+  <div class="vframe">
+    <h2 class="hook">внедри ИИ<br>в работу<br>и жизнь</h2>
+    <p class="cap cap1">ты ставишь задачу —<br>AI-команда делает</p>
+    <div class="scrubnote"><span>листай вверх</span></div>
+  </div>
+</div></div>
+
+<section id="about" class="wrap" style="z-index:3">
+  <div class="glass about">
+    <img class="photo" src="media/polina.jpg" alt="Полина Легран" loading="lazy">
+    <div class="txt">
+      <div class="eyebrow">01 · Обо мне</div>
+      <h2>Полина Легран</h2>
+      <p><b>AI-продюсер.</b> Веду свои проекты и блог <b>без продакшена</b> — почти все процессы делает моя <b>виртуальная AI-команда</b>, а я ей просто руковожу.</p>
+      <p>Сотрудничаю с крупным экспертом-маркетологом: <b>250&nbsp;000+ подписчиков и 30&nbsp;000+ учеников</b>. Также беру задачи брендов, бизнесов и экспертов — <b>от контента и трафика до автоматизации, стратегии и запусков</b>.</p>
+      <div class="nichelabel">С кем работаю</div>
+      <div class="marquee"><div><span>Эксперты</span><span>Предприниматели</span><span>Бренды</span><span>Бизнес</span><span>Компании</span><span>Предприятия</span><span>СММ-специалисты</span><span>Маркетологи</span><span>Блогеры</span><span>Товарка и WB-селлеры</span><span>Фотографы</span><span>Дизайнеры</span><span>Кондитеры</span><span>Психологи</span><span>Нутрициологи</span><span>Врачи</span><span>Клиники</span><span>Стоматологии</span><span>Бьюти-мастера</span><span>Салоны красоты</span><span>Репетиторы</span><span>Онлайн-образование</span><span>Новички</span><span>Эксперты</span><span>Предприниматели</span><span>Бренды</span><span>Бизнес</span><span>Компании</span><span>Предприятия</span><span>СММ-специалисты</span><span>Маркетологи</span><span>Блогеры</span><span>Товарка и WB-селлеры</span><span>Фотографы</span><span>Дизайнеры</span><span>Кондитеры</span><span>Психологи</span><span>Нутрициологи</span><span>Врачи</span><span>Клиники</span><span>Стоматологии</span><span>Бьюти-мастера</span><span>Салоны красоты</span><span>Репетиторы</span><span>Онлайн-образование</span><span>Новички</span></div></div>
+    </div>
+  </div>
+  
+</section>
+
+<section class="wrap"><div class="plan"><div class="in">
+  <div><div class="eyebrow" style="color:#62798C">02 · 90 секунд · 5 вопросов</div>
+    <h2 style="margin-top:14px">Пошаговый план<br>под тебя</h2>
+    <p>За 90 секунд получишь понятный план: как конкретно тебе внедрить систему с ИИ. Для любого уровня — новичок или про.</p>
+    <div class="steps"><span>Ниша</span><span>Что съедает время</span><span>Часы</span><span>Опыт</span><span>Цель</span></div></div>
+  <button class="btn" onclick="openQuiz()">Забрать личный разбор</button>
+</div></div></section>
+
+<section id="svc" class="wrap">
+  <div class="head">
+    <div><div class="eyebrow">03 · Услуги</div><h2 style="margin-top:14px">Как со мной<br>поработать</h2></div>
+    <div class="tabs"><button class="tab" data-f="all" aria-selected="true">Все</button><button class="tab" data-f="brand" aria-selected="false">Брендам</button><button class="tab" data-f="biz" aria-selected="false">Бизнесу</button><button class="tab" data-f="expert" aria-selected="false">Экспертам</button></div>
+  </div>
+  <div class="lente">
+    <article class="glass card pcard" data-aud="brand expert">
+      <div class="shot gal"><div class="gtrack">
+        <img src="media/w01-a.jpg" alt="Нейрофотосессия: студийные кадры" loading="lazy">
+        <img src="media/w01-b.jpg" alt="Нейрофотосессия: день рождения" loading="lazy">
+      </div><b>01</b><div class="gdots"><i class="on"></i><i></i></div></div>
+      <div class="body">
+        <h3>Нейрофотосессия</h3>
+        <p class="psub">Ты в нужном образе и локации — без студии и фотографа</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Нейрофотосессия. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz expert">
+      <div class="shot gal"><div class="gtrack">
+        <img src="media/w02-a.jpg" alt="Креатив: бьюти-клиника SOL на пляже" loading="lazy">
+        <img src="media/w02-b.jpg" alt="Креатив: реклама виллы для застройщика" loading="lazy">
+        <img src="media/w02-c.jpg" alt="Креатив: девушка на серфе на фоне Москва-Сити" loading="lazy">
+      </div><b>02</b><div class="gdots"><i class="on"></i><i></i><i></i></div></div>
+      <div class="body">
+        <h3>Креативы для бизнеса</h3>
+        <p class="psub">Обложки, баннеры, рекламные визуалы</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Креативы для бизнеса. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz">
+      <div class="shot gal"><div class="gtrack">
+        <img src="media/w03-a.jpg" alt="Фото товара: мицеллярная вода SHIK" loading="lazy">
+        <img src="media/w03-d.jpg" alt="Фото товара: рекламная инсталляция духов" loading="lazy">
+        <img src="media/w03-b.jpg" alt="Фото товара: баннер крема на фасаде" loading="lazy">
+        <img src="media/w03-e.jpg" alt="Фото товара: кукла в упаковке для шоколадного бренда" loading="lazy">
+        <img src="media/w03-c.jpg" alt="Фото товара: подарочные пакеты на парашютах над Парижем" loading="lazy">
+      </div><b>03</b><div class="gdots"><i class="on"></i><i></i><i></i><i></i><i></i></div></div>
+      <div class="body">
+        <h3>Фото товара для брендов</h3>
+        <p class="psub">5–7 кадров: предметка без съёмки</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Фото товара для брендов. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz">
+      <div class="shot gal"><div class="gtrack">
+        <img src="media/w04-c.jpg" alt="Карточки товара: коричневый костюм для маркетплейса" loading="lazy">
+        <img src="media/w04-a.jpg" alt="Карточки товара: спортивный костюм для маркетплейса" loading="lazy">
+      </div><b>04</b><div class="gdots"><i class="on"></i><i></i></div></div>
+      <div class="body">
+        <h3>Карточки товаров</h3>
+        <p class="psub">Инфографика для маркетплейсов</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Карточки товаров. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz expert">
+      <div class="shot gal"><div class="gtrack">
+        <video src="media/v05-b.mp4" poster="media/v05-b.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+        <video src="media/v05-a.mp4" poster="media/v05-a.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+      </div><b>05</b><div class="gdots"><i class="on"></i><i></i></div></div>
+      <div class="body">
+        <h3>Видео-креативы</h3>
+        <p class="psub">Оживление фото, промо, fashion, UGC</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Видео-креативы. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz">
+      <div class="shot gal"><div class="gtrack">
+        <video src="media/v06-a.mp4" poster="media/v06-a.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+      </div><b>06</b></div>
+      <div class="body">
+        <h3>3D-видео</h3>
+        <p class="psub">Объёмные ролики и анимация</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: 3D-видео. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz expert">
+      <div class="shot gal"><div class="gtrack">
+        <video src="media/v07-a.mp4" poster="media/v07-a.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+      </div><b>07</b><button class="snd" aria-label="Включить звук" onclick="event.stopPropagation();const v=this.parentNode.querySelector('video');v.muted=!v.muted;if(!v.muted)v.play();this.classList.toggle('on',!v.muted);this.setAttribute('aria-label',v.muted?'Включить звук':'Выключить звук')"></button></div>
+      <div class="body">
+        <h3>Аватар и монтаж</h3>
+        <p class="psub">Говорящий аватар, монтаж, субтитры</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Аватар и монтаж. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz expert">
+      <div class="shot gal"><div class="gtrack">
+        <video src="media/v08-b.mp4" poster="media/v08-b.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+      </div><b>08</b></div>
+      <div class="body">
+        <h3>Сайт под ключ</h3>
+        <p class="psub">Лендинг или сайт-портфолио целиком</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Сайт под ключ. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="biz">
+      <div class="shot phone"><b>09</b>
+        <div class="iphone"><i class="island"></i><video src="media/v09-a.mp4" poster="media/v09-a.jpg" muted loop playsinline preload="none" data-lazyplay></video></div>
+        <a class="tryapp" href="https://t.me/vibe_places_bot" target="_blank" rel="noopener">Открыть приложение <span>↗</span></a>
+      </div>
+      <div class="body">
+        <h3>Приложение</h3>
+        <p class="psub">Мобильное, веб-приложение или Telegram мини-апп</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Приложение. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="biz expert">
+      <div class="shot gal"><div class="gtrack">
+        <video src="media/v10-a.mp4" poster="media/v10-a.jpg" muted loop playsinline preload="none" data-lazyplay></video>
+      </div><b>10</b>
+        <a class="tryapp" href="https://dashboard-legran.netlify.app" target="_blank" rel="noopener" onclick="event.stopPropagation()">Открыть дашборд <span>↗</span></a>
+      </div>
+      <div class="body">
+        <h3>Дашборд</h3>
+        <p class="psub">Калькуляторы, отчёты и аналитика под задачу</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Дашборд. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="biz">
+      <div class="shot soon"><b>11</b><span class="soonpill">Скоро</span></div>
+      <div class="body">
+        <h3>Сервис</h3>
+        <p class="psub">Рабочий инструмент под задачу бизнеса</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Сервис. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="biz expert">
+      <div class="shot soon"><b>12</b><span class="soonpill">Скоро</span></div>
+      <div class="body">
+        <h3>Обучающая платформа</h3>
+        <p class="psub">Уроки, доступы, прогресс учеников</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: Обучающая платформа. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+    <article class="glass card pcard" data-aud="brand biz expert">
+      <div class="shot soon"><b>13</b><span class="soonpill">Скоро</span></div>
+      <div class="body">
+        <h3>ИИ-агенты</h3>
+        <p class="psub">Ассистент, продажник, трекер, стилист</p>
+        <a class="btn sm" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg('Привет! Хочу узнать стоимость: ИИ-агенты. Расскажу задачу.')\">Узнать стоимость →</a>
+      </div>
+    </article>
+  </div>
+  <div class="scroll-hint">→ листайте вбок</div>
+</section>
+
+
+
+
+<section id="edu" class="wrap"><div class="glass edu">
+  <div class="l">
+    <div class="eyebrow">04 · Обучение</div>
+    <h2>Собери свою AI-систему</h2>
+    <p class="lead">Внедришь ИИ в работу и жизнь — систему, которая 24/7 приводит клиентов и заявки без твоего участия и берёт на себя до 80% задач по блогу и бизнесу: от стратегии и контента до автоматизации, сайтов и приложений.</p>
+    <p class="edu-intro">Внедри систему с AI-командой по шагам:</p>
+    <div class="tl">
+      <details open><summary><b>01</b><span>Claude под тебя</span></summary>
+        <p>Поймёшь, кому и как продавать: Claude разберёт твою нишу, аудиторию и конкурентов и найдёт твою аутентичность. Получишь чёткое позиционирование, понимание болей, потребностей и желаний своих клиентов, а также первых ассистентов, настроенных под тебя.</p></details>
+      <details><summary><b>02</b><span>Продукт и воронки</span></summary>
+        <p>Выберешь модель продаж и формат продукта или услуги и упакуешь их в оффер, от которого сложно отказаться. Подберёшь воронки под себя и получишь блог, который работает на тебя: приводит клиентов и продаёт, пока ты занята другим.</p></details>
+      <details><summary><b>03</b><span>Контент</span></summary>
+        <p>Выстроишь контент-стратегию, которая сама приводит клиентов и бренды: понимаешь, что снимать и писать, чтобы из подписчиков вырастали заявки — без продакшена и команды.</p></details>
+      <details><summary><b>04</b><span>Агенты</span></summary>
+        <p>Собираешь себе сотрудников, которые работают 24/7 и не просят зарплату: личного ассистента, SMM-щика, продажника, аналитика. Ты ставишь задачу — они делают.</p></details>
+      <details><summary><b>05</b><span>Вайбкодинг</span></summary>
+        <p>Сайты, приложения, мини-аппы, сервисы и дашборды будешь щёлкать как орешки — под свои задачи и без разработчиков. А ещё сможешь делать их на заказ и продавать как отдельную услугу.</p></details>
+    </div>
+    <p class="edu-out">На выходе — <b>своя AI-команда, которой ты просто руководишь</b>, а работа и жизнь идут в кайф.</p>
+    <div class="bonuses"><span>Бонус: прогревы</span><span>Бонус: стратегия на год</span><span>Бонус: ИИ-куратор</span><span>Бонус: монетизация</span><span>Бонус: база промптов</span><span>Бонус: шаблоны</span></div>
+    <div style="margin-top:32px"><a class="btn" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg(MSG.learn)">Узнать подробности</a></div>
+  </div>
+  <div class="r">кадр или фото<br>для блока обучения</div>
+</div></section>
+
+<section id="certs" class="wrap">
+  <div class="eyebrow">Сертификаты</div>
+  <h2 style="margin:14px 0 14px;font-size:clamp(26px,3.2vw,40px)">Проверяю на себе</h2>
+  <blockquote class="certquote">
+    Регулярно прохожу обучения у практиков и <b>ежедневно тестирую новые инструменты</b> на своих проектах.
+    В работу и в <b>Balance AI</b> беру только то, что <b>действительно сработало</b>.
+    Тебе не нужно тратить месяцы на перебор сухих программ.
+  </blockquote>
+  <div class="certs">
+    <figure class="glass cert"><img src="media/cert-14.jpg" alt="Сертификат: интенсив по внедрению нейросетей в блог" loading="lazy"><figcaption>Внедрение нейросетей в блог</figcaption></figure>
+    <figure class="glass cert"><img src="media/cert-15.jpg" alt="Сертификат: Claude на максимум" loading="lazy"><figcaption>Claude на максимум</figcaption></figure>
+    <figure class="glass cert"><img src="media/cert-16.jpg" alt="Сертификат: Нейросистема" loading="lazy"><figcaption>Нейросистема</figcaption></figure>
+    <figure class="glass cert"><img src="media/cert-17.jpg" alt="Сертификат: Контент-завод, уровень эксперт" loading="lazy"><figcaption>Контент-завод · уровень «Эксперт»</figcaption></figure>
+  </div>
+
+  <div class="chcard">
+    <h3>А ещё залетай в мой Telegram-канал</h3>
+    <p>Каждый день показываю систему изнутри: новые связки и фишки, что сработало, а что провалилось — и как повторить это у себя.</p>
+    <a class="chbtn" href="https://t.me/+9v1BMYF__aw5MjZi" target="_blank" rel="noopener">Подписаться на канал <span>→</span></a>
+  </div>
+</section>
+
+
+
+
+<section id="faq" class="wrap">
+  <div class="faqhead">
+    <div class="eyebrow">05 · Вопрос/ответ</div>
+    <h2>Частые вопросы</h2>
+  </div>
+  <div class="faqtabs">
+    <button class="ftab" data-g="coop" aria-selected="true">По сотрудничеству</button>
+    <button class="ftab" data-g="learn" aria-selected="false">По обучению</button>
+  </div>
+  <div class="faq">
+    <details class="q-coop" open><summary>Сколько занимает работа над проектом?</summary>
+      <p>Визуал — пара часов-день. Видео — день плюс-минус. Сайты и сервисы — от дня до нескольких дней. Точный срок называю после того, как ты опишешь задачу.</p></details>
+    <details class="q-coop"><summary>Сколько правок входит в стоимость?</summary>
+      <p>После утверждённого задания — до двух кругов правок бесплатно. Дальше считаем отдельно, но до такого доходит редко: сначала согласуем направление, потом присылаю мудборд и делаем.</p></details>
+    <details class="q-coop"><summary>Кому принадлежат права на готовый материал?</summary>
+      <p>Тебе. Права на оплаченный материал переходят заказчику, использовать его можно где угодно и сколько угодно.</p></details>
+    <details class="q-coop"><summary>Можно с моим лицом и моим товаром, а не генерация с нуля?</summary>
+      <p>Да. Реального человека и реальный продукт можно перенести в нужную локацию и стиль — это как раз самая частая задача.</p></details>
+    <details class="q-coop"><summary>Что если результат не понравится?</summary>
+      <p>Если работа не соответствует согласованному заданию — переделываю. Если задача изменилась по ходу, обсуждаем новые условия. До результата довожу, а не бросаю на середине.</p></details>
+    <details class="q-coop"><summary>Как оплатить и как мы начнём?</summary>
+      <p>Пишешь в Telegram → обсуждаем задачу и сроки → фиксируем условия и предоплату → начинаю. Никаких форм и касс на сайте.</p></details>
+    <details class="q-coop"><summary>Работаете с моей нишей?</summary>
+      <p>Работала с экспертами, медициной, бьюти, маркетплейсами и онлайн-образованием. Если твоей ниши в списке нет — напиши, посмотрю задачу и честно скажу, берусь или нет.</p></details>
+    <details class="q-coop"><summary>Что нужно от меня для старта?</summary>
+      <p>Вводные о продукте и материалы, если они есть: фото, тексты, примеры. Остальное на мне. По ходу присылаю на согласование, чтобы не уйти не туда.</p></details>
+    <details class="q-learn" open><summary>А если я совсем новичок и не из IT?</summary>
+      <p>Так и задумано. Всё показываю руками на экране, без кода и терминов. Мы сразу делаем на твоих задачах, а не на абстрактных примерах — первый рабочий результат появляется в первые дни.</p></details>
+    <details class="q-learn"><summary>Сколько времени нужно в день?</summary>
+      <p>Немного: смотришь короткий шаг и сразу повторяешь. Обучение идёт две недели в формате 20% теории и 80% практики — сидеть часами не нужно, нужно делать.</p></details>
+    <details class="q-learn"><summary>А вдруг я запутаюсь или брошу на полпути?</summary>
+      <p>Это личное ведение, а не папка с уроками. Я веду тебя по шагам и вижу, где ты застряла. Плюс ИИ-куратор: он на связи круглосуточно, напоминает, что дальше, и не даёт слиться на середине.</p></details>
+    <details class="q-learn"><summary>Что именно я получу в итоге?</summary>
+      <p>Свою AI-команду: настроенного под тебя Claude, ассистентов, контент-агента, который сам собирает рилсы, карусели и посты, и навык вайбкодинга — сайты, мини-аппы, дашборды. Плюс бонусы: прогревы, стратегия на год, монетизация.</p></details>
+    <details class="q-learn"><summary>Какие ещё расходы, кроме обучения?</summary>
+      <p>Подписки как рабочий инструмент — до 50 долларов в месяц. Точные суммы зависят от твоих задач.</p></details>
+    <details class="q-learn"><summary>Нужен ли мощный компьютер?</summary>
+      <p>Смотря что делаешь. Если только визуал и видео — хватит телефона. Если сайты, сервисы и вайбкодинг — нужен компьютер.</p></details>
+    <details class="q-learn"><summary>Сколько стоит и как оплатить?</summary>
+      <p>Условия можно узнать в личке в Telegram: сначала смотрю, подойдёт ли тебе обучение вообще. Напиши — расскажу формат и стоимость.</p></details>
+    <details class="q-learn"><summary>Что если обучение мне не подойдёт?</summary>
+      <p>Перед стартом мы разбираем твою задачу. Если вижу, что тебе выгоднее заказать работу под ключ, а не учиться — скажу прямо и предложу услугу.</p></details>
+  </div>
+
+  <footer>
+    <div class="fcol fbrand">
+      <div class="fmark"><i class="orb"></i>BALANCE<em>AI</em></div>
+      <p>Внедряем систему с ИИ в работу и жизнь — брендам, бизнесу и экспертам.</p>
+      <p class="fname">Полина Легран · AI-продюсер</p>
+    </div>
+
+    <div class="fcol">
+      <h4>Связь</h4>
+      <a href="https://t.me/polina_legran" target="_blank" rel="noopener">@polina_legran</a>
+      <a href="https://t.me/+9v1BMYF__aw5MjZi" target="_blank" rel="noopener">Telegram-канал</a>
+      <a href="mailto:legranpolina@gmail.com">legranpolina@gmail.com</a>
+      <button class="fplan" onclick="openQuiz()">Получить пошаговый план →</button>
+    </div>
+    <div class="fbottom">
+      <span>© 2026 Balance AI · Полина Легран</span>
+      <span>Работаю со всем миром — часовые пояса не мешают</span>
+      <span>Сайт собран без разработчиков, через свою AI-систему</span>
+    </div>
+  </footer>
+</section>
+
+<div class="ov" id="ov"><button class="qclose" onclick="closeQuiz()">×</button><div class="quiz" id="quiz"></div></div>
+
+
+
+<script>
+const hero=document.querySelector('.hero'),stick=hero.querySelector('.stick');
+const vid=document.querySelector('.heroVid'),heroC=document.querySelector('.hero-c'),
+      loadEl=document.getElementById('heroLoad'),note=document.querySelector('.scrubnote'),hook=document.querySelector('.hook'),cap1=document.querySelector('.cap1'),cap2=document.querySelector('.cap2'),cap2shade=document.querySelector('.cap2shade');
+
+vid.src = 'media/hero3.mp4';   // три ролика в одном: кадр за столом → ноутбук → здание → сайт
+vid.pause();
+
+let dur=0, target=0, ticking=false, ready=false;
+vid.addEventListener('loadedmetadata',()=>{dur=vid.duration||6.1;schedule()});
+function markReady(){ if(ready)return; ready=true; loadEl.classList.add('gone'); }
+vid.addEventListener('canplaythrough',markReady);
+vid.addEventListener('loadeddata',()=>{ if(vid.readyState>=3) markReady(); });
+setTimeout(()=>{ if(vid.readyState>=2) markReady(); },3000);
+
+function ramp(p,a,b){return Math.min(1,Math.max(0,(p-a)/(b-a)))}
+function easeOut(t){return 1-Math.pow(1-t,3)}
+
+function frame(){
+  ticking=false;
+  const r=hero.getBoundingClientRect(), span=hero.offsetHeight-innerHeight;
+  let p=span>0?(-r.top/span):0; if(!isFinite(p))p=0; p=Math.min(1,Math.max(0,p));
+  stick.style.setProperty('--p',p);
+
+  if(dur){
+    target=p*dur*0.90;   // до кадра, где в ролике появляется сам сайт
+    const cur=vid.currentTime, d=target-cur;
+    if(Math.abs(d)>0.015) vid.currentTime = cur + d*0.3;
+  }
+  // видео растворяется на последних процентах — и на его месте живой первый экран
+  const reveal = ramp(p,.70,.88);
+  vid.style.opacity = 1 - ramp(p,.70,.86);
+  heroC.style.opacity = reveal;
+  heroC.style.pointerEvents = reveal>.5 ? 'auto' : 'none';
+  // подсказка улетает вверх, как только тронули скролл
+  const away = ramp(p,0,.06);
+  note.style.opacity = 1-away;
+  note.style.transform = `translate(-50%, calc(-50% - ${90*away}px))`;
+  hook.style.opacity = 1-ramp(p,0,.07);
+  const c1=ramp(p,.14,.19)*(1-ramp(p,.33,.38)), c2=ramp(p,.47,.52)*(1-ramp(p,.61,.66));
+  cap1.style.opacity=c1; cap1.style.setProperty('--dy',`${(1-ramp(p,.14,.19))*40 - ramp(p,.33,.38)*40}px`);
+  cap2.style.opacity=c2; cap2shade.style.opacity=c2; cap2.style.setProperty('--dy',`${(1-ramp(p,.47,.52))*50-ramp(p,.61,.66)*50}px`);
+}
+function schedule(){ if(!ticking){ ticking=true; requestAnimationFrame(frame); } }
+addEventListener('scroll',schedule,{passive:true});
+addEventListener('touchmove',schedule,{passive:true});
+addEventListener('touchend',schedule,{passive:true});
+addEventListener('resize',schedule);
+addEventListener('load',schedule);
+schedule();
+const cards=[...document.querySelectorAll('.pcard')];
+document.querySelectorAll('.ftab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.ftab').forEach(x=>x.setAttribute('aria-selected','false'));
+  t.setAttribute('aria-selected','true');
+  const g=t.dataset.g;
+  document.querySelectorAll('.faq details').forEach(d=>{
+    const on=d.classList.contains('q-'+g);
+    d.style.display=on?'block':'none';
+    if(!on) d.open=false;
+  });
+});
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.setAttribute('aria-selected','false'));
+  t.setAttribute('aria-selected','true');
+  const f=t.dataset.f;
+  cards.forEach(c=>{
+    const on = f==='all' || (c.dataset.aud||'').split(' ').includes(f);
+    c.style.display = on ? '' : 'none';
+  });
+  document.querySelector('.lente').scrollTo({left:0,behavior:'smooth'});
+});
+const TG='https://t.me/polina_legran';
+const MSG={
+  order:'Привет! Хочу заказать услугу — расскажи, как начнём.',
+  learn:'Привет! Хочу пройти обучение Balance AI — расскажи подробнее.',
+  ask:'Привет! Есть вопрос по твоей работе.',
+  info:'Привет! Хочу узнать подробности сотрудничества.'
+};
+const CH='https://t.me/+9v1BMYF__aw5MjZi';
+function tgChannel(){window.open(CH,'_blank','noopener')}
+function copyMsg(msg){ if(msg&&navigator.clipboard) navigator.clipboard.writeText(msg).catch(()=>{}); return true }
+function tg(msg){ copyMsg(msg); window.open(TG,'_blank','noopener'); }
+const Q=[
+ {q:'Кто ты сейчас?',o:[
+  {t:'Эксперт или специалист', r:'Покажу, как забрать у нейросети всю рутину вокруг блога.', seg:'expert'},
+  {t:'Бренд или бизнес', r:'Разложу, что из контента и процессов можно передать ИИ.', seg:'biz'},
+  {t:'Блогер', r:'Соберу систему, чтобы блог рос без пятичасовых каруселей.', seg:'expert'},
+  {t:'Мастер: фотограф, кондитер и т.п.', r:'Покажу, как выглядит контент-система под твою нишу.', seg:'expert'}]},
+ {q:'Что сейчас отнимает больше всего часов?',o:[
+  {t:'Контент: посты, рилсы, карусели', r:'Это чинится в первую очередь — и быстро.', first:'контент'},
+  {t:'Ответы клиентам и подписчикам', r:'Тут тоже есть, что делегировать.', first:'переписку с клиентами'},
+  {t:'Рутина и организация процессов', r:'Разберём, что из этого вообще не твоя работа.', first:'рутину и организацию'},
+  {t:'Сайты, воронки, автоматизация', r:'Покажу, где это собрать один раз и забыть.', first:'сайты и воронки'}]},
+ {q:'Сколько часов в неделю уходит на блог?',o:[
+  {t:'Меньше 2', r:'Значит, где-то работаешь на автомате — найдём, где не хватает системы.', free:'2–3'},
+  {t:'2–5', r:'Уже есть база, дальше вопрос в выстроенном процессе.', free:'3–5'},
+  {t:'5–10', r:'Здесь обычно теряется больше всего именно на рутине.', free:'6–8'},
+  {t:'Больше 10', r:'Разложим, что из этого точно не твоя задача.', free:'10+'}]},
+ {q:'Как сейчас пользуешься нейросетями?',o:[
+  {t:'Полный ноль', r:'Начнём с нуля — это займёт меньше времени, чем кажется.', lvl:'new'},
+  {t:'Пробовала пару инструментов', r:'Разложу, с чего начать, чтобы не терять время.', lvl:'new'},
+  {t:'Использую, но хаотично', r:'Дело не в инструментах, а в системе — соберём.', lvl:'pro'},
+  {t:'Есть система, хочу усилить', r:'Значит, дело за масштабом — покажу, что добавить.', lvl:'pro'}]},
+ {q:'Что хочешь получить в итоге?',o:[
+  {t:'Больше свободного времени', r:'То есть система, а не ты 24/7 у экрана.', goal:'освободить время'},
+  {t:'Больше клиентов и продаж', r:'Значит, контент должен продавать, а не просто существовать.', goal:'больше клиентов'},
+  {t:'Понятную систему вместо хаоса', r:'Ровно то, что делаю сама и показываю в блоге.', goal:'систему вместо хаоса'},
+  {t:'Свой AI-отдел под ключ', r:'Это уже про стратегию — обсудим на разборе.', goal:'AI-отдел под ключ'}]}
+];
+let step=0, ans=[];
+function openQuiz(){step=0;ans=[];document.getElementById('ov').classList.add('on');document.body.style.overflow='hidden';render()}
+function closeQuiz(){document.getElementById('ov').classList.remove('on');document.body.style.overflow=''}
+function pick(i){ans[step]=i;render()}
+function next(){ if(ans[step]==null) return; step++; render() }
+function back(){ if(step>0){step--;render()} }
+
+function render(){
+  const el=document.getElementById('quiz');
+  if(step<Q.length){
+    const q=Q[step], chosen=ans[step];
+    el.innerHTML=`
+      <div class="qbar"><i style="width:${(step+(chosen!=null?1:0))/Q.length*100}%"></i></div>
+      <div class="qtop">Вопрос ${step+1} из ${Q.length}</div>
+      <h3>${q.q}</h3>
+      <div class="opts">${q.o.map((o,k)=>`
+        <button class="opt ${chosen===k?'sel':''}" onclick="pick(${k})">
+          <span class="opt-t">${o.t}</span>
+          ${chosen===k?`<span class="opt-r">${o.r}</span>`:''}
+        </button>`).join('')}</div>
+      <div class="qfoot">
+        <button class="btn ghost sm" onclick="back()" ${step?'':'disabled style=opacity:.35'}>Назад</button>
+        <button class="btn sm" onclick="next()" ${chosen==null?'disabled style=opacity:.4':''}>
+          ${step===Q.length-1?'Показать план':'Дальше'}</button>
+      </div>`;
+    return;
+  }
+
+  // ---------- результат ----------
+  const seg=Q[0].o[ans[0]].seg, first=Q[1].o[ans[1]].first, free=Q[2].o[ans[2]].free,
+        lvl=Q[3].o[ans[3]].lvl, goal=Q[4].o[ans[4]].goal;
+  const lines=Q.map((q,k)=>q.o[ans[k]].r);
+
+  const biz = seg==='biz';
+  const mainLabel = biz ? 'Получить разбор и обсудить проект' : 'Получить разбор';
+
+  el.innerHTML=`
+    <div class="qbar"><i style="width:100%"></i></div>
+
+    <div class="rescard">
+      <div class="resicon">✓</div>
+      <h3>Твой персональный разбор готов</h3>
+      <p class="reslead">Собрала его под твою ситуацию: что отдать ИИ первым, что вторым и сколько времени это освободит.</p>
+
+      <div class="res">
+        <div class="line"><b>Первым шагом</b>Снять с себя ${first}</div>
+        <div class="line"><b>Вторым шагом</b>Собрать повторяемый процесс, чтобы не начинать каждый раз с нуля</div>
+        <div class="line"><b>Освободится</b>Ориентировочно ${free} часов в неделю</div>
+        <div class="line" style="border:0"><b>Цель</b>${goal[0].toUpperCase()+goal.slice(1)}</div>
+      </div>
+
+      <a class="btn resmain" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg(quizMsg())">${mainLabel} <span>→</span></a>
+      <p class="resfine">Ответы подставятся в сообщение — отправь, и пришлю полный разбор с инструментами под твою нишу.</p>
+    </div>
+
+    <div class="rescard second">
+      <h3>А ещё залетай в мой Telegram-канал</h3>
+      <p class="reslead">Там показываю систему изнутри: что собрала, что сработало, что нет.</p>
+      <a class="btn ghost" href="https://t.me/+9v1BMYF__aw5MjZi" target="_blank" rel="noopener">Подписаться на канал <span>→</span></a>
+      <p class="resfine">${biz
+        ? 'Хочешь сначала посмотреть работы? <a href="#svc" onclick="closeQuiz()">Открыть портфолио</a>'
+        : 'Уже горишь и хочешь сразу в дело? <a href="#edu" onclick="closeQuiz()">Посмотреть обучение</a>'}</p>
+    </div>
+
+    <button class="restart" onclick="openQuiz()">Пройти заново</button>`;
+}
+
+function quizMsg(){
+  return 'Привет! Прошёл(ла) разбор на сайте:\n'+Q.map((q,k)=>`${k+1}. ${q.q} — ${q.o[ans[k]].t}`).join('\n')+'\n\nЗаберу план.';
+}
+function sendQuiz(){ tg(quizMsg()) }
+
+
+const vio=new IntersectionObserver(es=>es.forEach(e=>{const v=e.target;if(e.isIntersecting){v.play().catch(()=>{})}else v.pause()}),{threshold:.35});
+document.querySelectorAll('video[data-lazyplay]').forEach(v=>vio.observe(v));
+document.querySelectorAll('.gtrack').forEach(t=>{
+  const dots=t.parentNode.querySelectorAll('.gdots i');
+  t.addEventListener('scroll',()=>{const k=Math.round(t.scrollLeft/t.clientWidth);dots.forEach((d,i)=>d.classList.toggle('on',i===k))},{passive:true});
+  t.parentNode.addEventListener('click',e=>{if(dots.length<2)return;const k=Math.round(t.scrollLeft/t.clientWidth);const n=(k+1)%dots.length;t.scrollTo({left:n*t.clientWidth,behavior:'smooth'})});
+});
+</script>
+
+
+</body></html>
