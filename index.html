@@ -292,6 +292,19 @@ summary:focus:not(:focus-visible),button:focus:not(:focus-visible){outline:none}
  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;box-shadow:0 2px 10px rgba(0,0,0,.18);transition:.15s}
 .snd:hover{background-color:rgba(255,255,255,.42)}
 .snd.on{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M11 5 6 9H3v6h3l5 4z'/%3E%3Cpath d='M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14'/%3E%3C/svg%3E")}
+/* ---------- mobile polish ---------- */
+html,body{overflow-x:clip}
+@media (max-width:760px){
+ #svc .head{flex-direction:column;align-items:flex-start;gap:16px}
+ #svc .tabs{max-width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+ #svc .tabs::-webkit-scrollbar{display:none}
+ #svc .tab{flex:none;white-space:nowrap;padding:9px 13px;font-size:13px}
+ section .edu > .r{display:none}
+ .bonuses{gap:6px}
+ .bonuses span{font-size:12px}
+ .faqtabs{max-width:100%}
+ .ftab{font-size:13px;padding:9px 12px}
+}
 /* ---------- edu ---------- */
 .edu{padding:0;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr}
 .edu .l{padding:clamp(30px,3.6vw,60px) clamp(24px,3.2vw,54px)}
