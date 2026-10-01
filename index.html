@@ -319,11 +319,21 @@ html,body{overflow-x:clip}
  /* вертикальное видео: окно с фото сверху (≈6–76% высоты), белое поле снизу — подписи живут в нём */
  .hero .heroVid{object-position:50% 50%}
  .hero .vframe{left:0;top:0;width:100%;height:100%;aspect-ratio:auto;transform:none}
- .hero .vframe .hook{left:22px;top:79.5%;transform:none;font-size:clamp(30px,9.4vw,42px);line-height:1;text-shadow:none}
- .hero .vframe .cap1{left:22px;top:79.5%;transform:translateY(var(--dy));font-size:clamp(26px,8vw,36px);line-height:1.02;text-shadow:none}
- .hero .vframe .scrubnote{left:76%;top:76%;width:104px}
- .hero .stick>.cap2{left:22px;top:79.5%;height:auto;transform:translateY(var(--dy));font-size:clamp(24px,7.4vw,34px);line-height:1.02;color:#141414;text-shadow:none}
- .hero .stick>.cap2 br:nth-of-type(1),.hero .stick>.cap2 br:nth-of-type(3){display:none}
+ .hero .vframe .hook,.hero .vframe .cap1,.hero .stick>.cap2{left:50%;top:88%;width:92%;height:auto;text-align:center;
+   transform:translate(-50%,calc(-50% + var(--dy,0px)));color:#16202A;text-shadow:none;letter-spacing:.01em;line-height:1.04;margin:0}
+ .hero .vframe .hook{font-size:clamp(28px,8.4vw,38px)}
+ .hero .vframe .cap1,.hero .stick>.cap2{font-size:clamp(24px,7vw,32px)}
+ .hero .vframe .hook br:nth-of-type(2),.hero .stick>.cap2 br:nth-of-type(1),.hero .stick>.cap2 br:nth-of-type(3){display:none}
+ .hero .vframe .scrubnote{left:82%;top:76%;width:92px}
+ .hero .vframe .scrubnote span{font-size:12px}
+ /* сертификаты — листалка */
+ .certs.certs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
+   margin:0 -20px;padding:4px 20px 14px;-webkit-overflow-scrolling:touch}
+ .certs::-webkit-scrollbar{display:none}
+ .certs .cert{flex:0 0 82%;scroll-snap-align:center;padding:12px}
+ .certs .cert img{aspect-ratio:4/3;object-fit:contain;background:#fff}
+ .certs .cert figcaption{font-size:14px}
+ .certs-hint{display:block!important}
 }
 /* ---------- edu ---------- */
 .edu{padding:0;overflow:hidden;display:grid;grid-template-columns:1.1fr .9fr}
@@ -535,7 +545,7 @@ footer>.fcol:nth-of-type(2){align-items:flex-end;text-align:right}
   <div class="cap2shade"></div>
   <p class="cap2">добро <br>пожаловать <br>в Balance <br>AI</p>
   <div class="vframe">
-    <h2 class="hook">внедри ИИ<br>в работу<br>и жизнь</h2>
+    <h2 class="hook">внедри ИИ <br>в работу <br>и жизнь</h2>
     <p class="cap cap1">ты ставишь задачу —<br>AI-команда делает</p>
     <div class="scrubnote"><span>листай вверх</span></div>
   </div>
@@ -752,6 +762,7 @@ footer>.fcol:nth-of-type(2){align-items:flex-end;text-align:right}
     <figure class="glass cert"><img src="media/cert-16.jpg" alt="Сертификат: Нейросистема" loading="lazy"><figcaption>Нейросистема</figcaption></figure>
     <figure class="glass cert"><img src="media/cert-17.jpg" alt="Сертификат: Контент-завод, уровень эксперт" loading="lazy"><figcaption>Контент-завод · уровень «Эксперт»</figcaption></figure>
   </div>
+  <p class="certs-hint" style="display:none;margin:2px 0 0;font-size:12px;color:#8A9AA8">→ листайте вбок</p>
 
   <div class="chcard">
     <h3>А ещё залетай в мой Telegram-канал</h3>
@@ -840,9 +851,25 @@ const vid=document.querySelector('.heroVid'),heroC=document.querySelector('.hero
 
 const MOB=matchMedia('(max-width:760px)').matches;
 const HV=MOB?{src:'media/hero-m.mp4',poster:'media/hero-m-poster.jpg',k:.80,c1:[.21,.25,.42,.46],c2:[.55,.59,.74,.78],rv:[.80,.92,.82,.95]}:{src:'media/hero3.mp4',poster:'media/hero3-poster.jpg',k:.90,c1:[.14,.19,.33,.38],c2:[.47,.52,.61,.66],rv:[.70,.86,.70,.88]};
-vid.poster=HV.poster;
-vid.src = HV.src;   // три ролика в одном: кадр за столом → ноутбук → здание → сайт
-vid.pause();
+// на телефоне — не видео, а последовательность кадров на canvas: перемотка видео на телефонах тормозит
+const SEQ=MOB?{n:98,cur:0,to:0,imgs:[]}:null;
+let layer=vid;
+if(SEQ){
+  const cv=document.createElement('canvas'); cv.className='heroVid heroCv'; vid.replaceWith(cv); layer=cv;
+  const cx=cv.getContext('2d');
+  const fit=()=>{const r=cv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);SEQ.drawn=-1};
+  addEventListener('resize',fit); fit();
+  const draw=i=>{let k=i;while(k>0&&!(SEQ.imgs[k]&&SEQ.imgs[k].complete&&SEQ.imgs[k].naturalWidth))k--;const im=SEQ.imgs[k];if(!im||!im.naturalWidth)return;
+    const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
+    cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);SEQ.drawn=i};
+  for(let i=0;i<SEQ.n;i++){const im=new Image();im.decoding='async';im.src=`media/hm/${String(i+1).padStart(3,'0')}.jpg`;
+    if(i===0)im.onload=()=>{draw(0);markReady()};SEQ.imgs.push(im)}
+  (function loop(){SEQ.cur+=(SEQ.to-SEQ.cur)*0.25;const i=Math.round(SEQ.cur);if(i!==SEQ.drawn)draw(i);requestAnimationFrame(loop)})();
+}else{
+  vid.poster=HV.poster;
+  vid.src = HV.src;   // три ролика в одном: кадр за столом → ноутбук → здание → сайт
+  vid.pause();
+}
 
 let dur=0, target=0, ticking=false, ready=false;
 vid.addEventListener('loadedmetadata',()=>{dur=vid.duration||6.1;schedule()});
@@ -860,6 +887,7 @@ function frame(){
   let p=span>0?(-r.top/span):0; if(!isFinite(p))p=0; p=Math.min(1,Math.max(0,p));
   stick.style.setProperty('--p',p);
 
+  if(SEQ) SEQ.to=p*HV.k*(SEQ.n-1);
   if(dur){
     target=p*dur*HV.k;   // до кадра, где в ролике появляется сам сайт
     const cur=vid.currentTime, d=target-cur;
@@ -867,7 +895,7 @@ function frame(){
   }
   // видео растворяется на последних процентах — и на его месте живой первый экран
   const reveal = ramp(p,HV.rv[2],HV.rv[3]);
-  vid.style.opacity = 1 - ramp(p,HV.rv[0],HV.rv[1]);
+  layer.style.opacity = 1 - ramp(p,HV.rv[0],HV.rv[1]);
   heroC.style.opacity = reveal;
   heroC.style.pointerEvents = reveal>.5 ? 'auto' : 'none';
   // подсказка улетает вверх, как только тронули скролл
