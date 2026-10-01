@@ -326,9 +326,18 @@ html,body{overflow-x:clip}
  .hero .vframe .hook br:nth-of-type(2),.hero .stick>.cap2 br:nth-of-type(1),.hero .stick>.cap2 br:nth-of-type(3){display:none}
  .hero .vframe .scrubnote{left:82%;top:76%;width:92px}
  .hero .vframe .scrubnote span{font-size:12px}
+ /* шире карточки на телефоне */
+ body .wrap{padding-left:10px;padding-right:10px}
+ body .edu .l{padding:26px 18px}
+ body .plan{padding:30px 18px}
+ body .about .txt{padding:24px 18px}
+ body .tl summary{grid-template-columns:34px 1fr auto;gap:10px}
+ body .tl details > p{padding-left:44px!important;margin-left:0}
+ body .faq details{padding-left:16px;padding-right:16px}
+ body .chcard{padding-left:18px;padding-right:18px}
  /* сертификаты — листалка */
  .certs.certs{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;
-   margin:0 -20px;padding:4px 20px 14px;-webkit-overflow-scrolling:touch}
+   margin:0 -10px;padding:4px 10px 14px;-webkit-overflow-scrolling:touch}
  .certs::-webkit-scrollbar{display:none}
  .certs .cert{flex:0 0 82%;scroll-snap-align:center;padding:12px}
  .certs .cert img{aspect-ratio:4/3;object-fit:contain;background:#fff}
