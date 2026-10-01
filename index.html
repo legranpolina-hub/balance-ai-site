@@ -861,7 +861,8 @@ const vid=document.querySelector('.heroVid'),heroC=document.querySelector('.hero
 const MOB=matchMedia('(max-width:760px)').matches;
 const HV=MOB?{src:'media/hero-m.mp4',poster:'media/hero-m-poster.jpg',k:.80,c1:[.21,.25,.42,.46],c2:[.55,.59,.74,.78],rv:[.80,.92,.82,.95]}:{src:'media/hero3.mp4',poster:'media/hero3-poster.jpg',k:.90,c1:[.14,.19,.33,.38],c2:[.47,.52,.61,.66],rv:[.70,.86,.70,.88]};
 // на телефоне — не видео, а последовательность кадров на canvas: перемотка видео на телефонах тормозит
-const SEQ=MOB?{n:98,cur:0,to:0,imgs:[]}:null;
+// и на телефоне, и на компьютере — кадры на canvas: плавно и не зависит от того, умеет ли хостинг отдавать видео кусками
+const SEQ=MOB?{dir:'hm',n:98,cur:0,to:0,imgs:[]}:{dir:'hd',n:85,cur:0,to:0,imgs:[]};
 let layer=vid;
 if(SEQ){
   const cv=document.createElement('canvas'); cv.className='heroVid heroCv'; vid.replaceWith(cv); layer=cv;
@@ -871,7 +872,7 @@ if(SEQ){
   const draw=i=>{let k=i;while(k>0&&!(SEQ.imgs[k]&&SEQ.imgs[k].complete&&SEQ.imgs[k].naturalWidth))k--;const im=SEQ.imgs[k];if(!im||!im.naturalWidth)return;
     const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
     cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);SEQ.drawn=i};
-  for(let i=0;i<SEQ.n;i++){const im=new Image();im.decoding='async';im.src=`media/hm/${String(i+1).padStart(3,'0')}.jpg`;
+  for(let i=0;i<SEQ.n;i++){const im=new Image();im.decoding='async';im.src=`media/${SEQ.dir}/${String(i+1).padStart(3,'0')}.jpg`;
     if(i===0)im.onload=()=>{draw(0);markReady()};SEQ.imgs.push(im)}
   (function loop(){SEQ.cur+=(SEQ.to-SEQ.cur)*0.25;const i=Math.round(SEQ.cur);if(i!==SEQ.drawn)draw(i);requestAnimationFrame(loop)})();
 }else{
