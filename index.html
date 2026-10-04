@@ -380,6 +380,34 @@ html,body{overflow-x:clip}
 .tl summary span{font-weight:600;font-size:17px;color:var(--ink)}
 .tl details p{margin:0 0 20px 70px;color:var(--muted);font-size:15px;max-width:60ch}
 .edu-out{margin:24px 0 0;color:var(--muted)}
+/* сравнение «как обычно / с AI-системой» */
+.vs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0 4px}
+.vs-c{border-radius:20px;padding:20px 20px 18px}
+.vs-c h4{margin:0 0 12px;font:700 17px Manrope;display:flex;gap:8px;align-items:center}
+.vs-c ul{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.vs-c li{position:relative;padding-left:26px;font-size:14px;line-height:1.45}
+.vs-c li::before{position:absolute;left:0;top:0;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;font:700 10px Manrope}
+.vs-old{background:rgba(255,255,255,.65);border:1px solid var(--line);color:var(--muted)}
+.vs-old h4{color:var(--ink)}
+.vs-old li::before{content:'✕';background:rgba(224,98,98,.12);color:#D46464}
+.vs-new{background:linear-gradient(155deg,#D3ECFC,#B4DDF7 80%);color:#1E3A50;border:1px solid rgba(79,167,224,.45);
+ box-shadow:0 20px 40px -24px rgba(79,167,224,.65),inset 0 1px 0 rgba(255,255,255,.8)}
+.vs-new h4{color:#16222B}
+.vs-new li::before{content:'✓';background:#4FA7E0;color:#fff}
+.vs-old b{color:#3F5464;font-weight:600}
+.vs-new b{color:#0F2D45;font-weight:700}
+/* правая карточка «дышит» вперёд-назад, по ней пробегает блик, пункты появляются по очереди */
+.vs-new{position:relative;overflow:hidden;animation:vsBreath 4.5s ease-in-out infinite;transform-origin:50% 60%}
+@keyframes vsBreath{50%{transform:translateY(-6px) scale(1.03);box-shadow:0 30px 54px -24px rgba(79,167,224,.85),inset 0 1px 0 rgba(255,255,255,.8)}}
+.vs-sheen{position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.55) 48%,transparent 60%);
+ background-size:250% 100%;background-position:120% 0;animation:evSheen 6s ease-in-out 1s infinite}
+.vs-new h4,.vs-new ul{position:relative}
+.vs.js .vs-c li{opacity:0;transform:translateX(-10px);transition:opacity .5s ease,transform .5s cubic-bezier(.2,.7,.2,1)}
+.vs.js.in .vs-c li{opacity:1;transform:none}
+.vs.js.in .vs-new li::before{animation:vsPop .5s cubic-bezier(.3,1.6,.5,1) both;animation-delay:inherit}
+@keyframes vsPop{from{transform:scale(0)}}
+@media (prefers-reduced-motion:reduce){.vs-new,.vs-sheen,.vs.js.in .vs-new li::before{animation:none}.vs.js .vs-c li{opacity:1;transform:none;transition:none}}
+@media (max-width:760px){.vs{grid-template-columns:1fr}}
 .edu-out b{color:var(--ink);font-weight:600}
 .tl div{display:grid;grid-template-columns:52px 1fr;gap:18px;padding:18px 0;border-top:1px solid var(--line);align-items:start}
 .tl b{font:800 14px Manrope;color:var(--gold);letter-spacing:.06em}
@@ -816,6 +844,22 @@ footer>.fcol:nth-of-type(2){align-items:flex-end;text-align:right}
         <p>Сайты, приложения, мини-аппы, сервисы и дашборды будешь щёлкать как орешки — под свои задачи и без разработчиков. А ещё сможешь делать их на заказ и продавать как отдельную услугу.</p></details>
     </div>
     <p class="edu-out">На выходе — <b>своя AI-команда, которой ты просто руководишь</b>, а работа и жизнь идут в кайф.</p>
+    <div class="vs">
+      <div class="vs-c vs-old"><h4>Как обычно <span>😐</span></h4><ul>
+        <li>Платишь SMM-щику, дизайнеру и разработчику — и всё равно <b>контролируешь всё сама</b></li>
+        <li>Часами думаешь, что выложить, — <b>контент выходит раз в неделю</b></li>
+        <li>Снимаешь «на удачу» — <b>охваты стоят</b></li>
+        <li>Заявки приходят, <b>только когда ты сама в сторис</b></li>
+        <li>Сайт или приложение — <b>дорого и месяцы ожидания</b></li>
+        <li>Нейросети отвечают «не то», и <b>ты бросаешь через неделю</b></li></ul></div>
+      <div class="vs-c vs-new"><i class="vs-sheen"></i><h4>С AI-системой <span>💎</span></h4><ul>
+        <li><b>80% задач делает твоя AI-команда</b> — ты только ставишь задачу</li>
+        <li><b>За 30 минут — контент на весь день</b>: рилс, пост, сторис</li>
+        <li><b>Виральный контент</b> на смыслах, которые уже залетают в нише</li>
+        <li><b>Воронки продают 24/7</b> — заявки идут без твоего участия</li>
+        <li><b>Сайт, приложение, сервис — сама</b>, без кода и разработчиков</li>
+        <li>Claude понимает тебя <b>с первого раза</b> и пишет твоим языком</li></ul></div>
+    </div>
     <div class="bonuses"><span>Бонус: прогревы</span><span>Бонус: стратегия на год</span><span>Бонус: ИИ-куратор</span><span>Бонус: монетизация</span><span>Бонус: база промптов</span><span>Бонус: шаблоны</span></div>
     <div style="margin-top:32px"><a class="btn" href="https://t.me/polina_legran" target="_blank" rel="noopener" onclick="copyMsg(MSG.learn)">Узнать подробности</a></div>
   </div>
@@ -1153,6 +1197,14 @@ document.querySelectorAll('.gtrack').forEach(t=>{
   t.parentNode.addEventListener('click',e=>{if(dots.length<2)return;const k=Math.round(t.scrollLeft/t.clientWidth);const n=(k+1)%dots.length;t.scrollTo({left:n*t.clientWidth,behavior:'smooth'})});
 });
 
+// сравнение: пункты появляются по очереди, когда блок доходит до экрана
+(function(){
+  const vs=document.querySelector('.vs'); if(!vs||!('IntersectionObserver' in window)) return;
+  vs.classList.add('js');
+  vs.querySelectorAll('.vs-old li').forEach((li,i)=>li.style.transitionDelay=(i*.08)+'s');
+  vs.querySelectorAll('.vs-new li').forEach((li,i)=>{li.style.transitionDelay=(.5+i*.14)+'s';li.style.animationDelay=(.5+i*.14)+'s'});
+  new IntersectionObserver((es,o)=>es.forEach(e=>{if(e.isIntersecting){vs.classList.add('in');o.disconnect()}}),{threshold:.25}).observe(vs);
+})();
 // обучение: картинка-лестница следует за открытым шагом
 (function(){
   const vis=document.querySelector('.edu-vis'); if(!vis) return;
