@@ -988,16 +988,27 @@ let layer=vid;
 if(SEQ){
   const cv=document.createElement('canvas'); cv.className='heroVid heroCv'; vid.replaceWith(cv); layer=cv;
   const cx=cv.getContext('2d');
-  const fit=()=>{const r=cv.getBoundingClientRect(),d=Math.min(2,devicePixelRatio||1);cv.width=Math.round(r.width*d);cv.height=Math.round(r.height*d);SEQ.drawn=-1};
+  // холст не больше самих кадров: на Retina иначе рисуем в 2 раза больше пикселей, чем есть в картинке
+  const fit=()=>{const r=cv.getBoundingClientRect();let d=Math.min(2,devicePixelRatio||1);const maxW=MOB?900:1600;if(r.width*d>maxW)d=maxW/r.width;
+    cv.width=Math.max(1,Math.round(r.width*d));cv.height=Math.max(1,Math.round(r.height*d));SEQ.drawn=-1};
   addEventListener('resize',fit); fit();
-  const draw=i=>{let k=i;while(k>0&&!(SEQ.imgs[k]&&SEQ.imgs[k].complete&&SEQ.imgs[k].naturalWidth))k--;const im=SEQ.imgs[k];if(!im||!im.naturalWidth)return;
-    const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
-    cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h);SEQ.drawn=i};
-  let got=0; const cnt=()=>{got++;window.HERO_PROG=got/SEQ.n};   // прогресс для заставки-счётчика
+  const ok=k=>{const m=SEQ.imgs[k];return m&&m.complete&&m.naturalWidth?m:null};
+  const pick=k=>{while(k>0&&!ok(k))k--;return ok(k)};      // если кадр ещё не догрузился — берём ближайший предыдущий
+  const put=(im,a)=>{const s=Math.max(cv.width/im.naturalWidth,cv.height/im.naturalHeight),w=im.naturalWidth*s,h=im.naturalHeight*s;
+    cx.globalAlpha=a;cx.drawImage(im,(cv.width-w)/2,(cv.height-h)/2,w,h)};
+  // позиция дробная: рисуем кадр i и поверх него кадр i+1 с прозрачностью = дробная часть — картинка перетекает, а не прыгает
+  const draw=pos=>{pos=Math.max(0,Math.min(SEQ.n-1,pos));const i=Math.floor(pos),f=pos-i,A=pick(i);if(!A)return;
+    put(A,1);if(f>.02&&i+1<SEQ.n){const B=ok(i+1);if(B)put(B,f)}
+    cx.globalAlpha=1;SEQ.drawn=pos};
+  let got=0; const cnt=()=>{got++;window.HERO_PROG=got/SEQ.n;SEQ.drawn=-1};   // прогресс для заставки-счётчика
   for(let i=0;i<SEQ.n;i++){const im=new Image();im.decoding='async';
     im.onload=i===0?()=>{cnt();draw(0);markReady()}:cnt; im.onerror=cnt;
     im.src=`media/${SEQ.dir}/${String(i+1).padStart(3,'0')}.jpg`;SEQ.imgs.push(im)}
-  (function loop(){SEQ.cur+=(SEQ.to-SEQ.cur)*0.25;const i=Math.round(SEQ.cur);if(i!==SEQ.drawn)draw(i);requestAnimationFrame(loop)})();
+  // сглаживание по времени, а не «за кадр экрана»: одинаково плавно на 60 и на 120 Гц
+  let tPrev=performance.now();
+  (function loop(now){const dt=Math.min(64,now-tPrev);tPrev=now;
+    const k=1-Math.exp(-dt/85);SEQ.cur+=(SEQ.to-SEQ.cur)*k;if(Math.abs(SEQ.to-SEQ.cur)<.004)SEQ.cur=SEQ.to;
+    if(SEQ.drawn<0||Math.abs(SEQ.cur-SEQ.drawn)>.004)draw(SEQ.cur);requestAnimationFrame(loop)})(tPrev);
 }else{
   vid.poster=HV.poster;
   vid.src = HV.src;   // три ролика в одном: кадр за столом → ноутбук → здание → сайт
@@ -1006,7 +1017,7 @@ if(SEQ){
 
 let dur=0, target=0, ticking=false, ready=false;
 vid.addEventListener('loadedmetadata',()=>{dur=vid.duration||6.1;schedule()});
-function markReady(){ if(ready)return; ready=true; loadEl.classList.add('gone'); }
+function markReady(){ if(ready)return; ready=true; loadEl.classList.add('gone'); setTimeout(()=>{loadEl.style.display='none'},700); }  // размытая заглушка больше не нужна — убираем, чтобы не нагружала
 vid.addEventListener('canplaythrough',markReady);
 vid.addEventListener('loadeddata',()=>{ if(vid.readyState>=3) markReady(); });
 setTimeout(()=>{ if(vid.readyState>=2) markReady(); },3000);
